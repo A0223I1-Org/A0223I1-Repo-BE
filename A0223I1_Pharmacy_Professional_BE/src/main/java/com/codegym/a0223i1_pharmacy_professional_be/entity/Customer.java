@@ -1,0 +1,46 @@
+package com.codegym.a0223i1_pharmacy_professional_be.entity;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.util.Set;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table(name = "customer")
+public class Customer {
+    @Id
+    @Column(name = "customer_id")
+    private String customerId;
+
+    @Column(name="customer_name", columnDefinition = "nvarchar(250)")
+    private String customerName;
+
+    private Integer age;
+
+    @Column(name="address", columnDefinition = "nvarchar(250)")
+    private String address;
+
+    @Column(name="phone_number", columnDefinition = "nvarchar(15)")
+    private String phoneNumber;
+
+    @Column(name="customer_type")
+    private String customerType;
+
+    private String note;
+
+    @JsonBackReference
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "account_id", referencedColumnName = "account_id")
+    private Account account;
+
+    @OneToOne(cascade = CascadeType.ALL, optional = true, mappedBy = "customer")
+    private Cart cart;
+
+    @OneToMany(mappedBy = "customer")
+    Set<Invoice> invoices;
+}
