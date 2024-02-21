@@ -1,4 +1,6 @@
 package com.codegym.a0223i1_pharmacy_professional_be.entity;
 
-public class test {
+public enum Role {
+    URER,
+    ADMIN
 }
