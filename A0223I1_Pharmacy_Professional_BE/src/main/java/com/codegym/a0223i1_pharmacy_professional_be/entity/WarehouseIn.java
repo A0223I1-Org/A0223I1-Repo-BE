@@ -3,6 +3,7 @@ package com.codegym.a0223i1_pharmacy_professional_be.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Set;
 
 
@@ -37,5 +38,5 @@ public class WarehouseIn {
     private Employee employee;
 
     @OneToMany(mappedBy = "warehouseIn", cascade = CascadeType.ALL)
-    Set<WarehouseInDetail> warehouseInDetails;
+    List<WarehouseInDetail> warehouseInDetails;
 }
