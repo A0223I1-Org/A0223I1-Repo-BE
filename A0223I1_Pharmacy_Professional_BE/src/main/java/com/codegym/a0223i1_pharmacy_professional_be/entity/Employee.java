@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -35,11 +36,11 @@ public class Employee {
     private Account account;
 
     @OneToMany(mappedBy = "employee")
-    Set<Invoice> invoices;
+    List<Invoice> invoices;
 
     @OneToMany(mappedBy = "employee")
-    Set<WarehouseIn> warehouseIns;
+    List<WarehouseIn> warehouseIns;
 
     @OneToMany(mappedBy = "employee")
-    Set<WarehouseOut> warehouseOuts;
+    List<WarehouseOut> warehouseOuts;
 }
