@@ -7,6 +7,8 @@ public enum Role {
 =======
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -23,7 +25,7 @@ public class Role {
     private String name;
 
     @OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
-    Set<AccountRole> accountRoles;
+    List<AccountRole> accountRoles;
 
 >>>>>>> cadb75df27bcffe44a1ed6b5fe475ac70486b02a
 }

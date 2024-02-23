@@ -3,6 +3,7 @@ package com.codegym.a0223i1_pharmacy_professional_be.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -29,8 +30,8 @@ public class Supplier {
     private boolean deleteFlag;
 
     @OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL)
-    Set<WarehouseIn> warehouseIns;
+    List<WarehouseIn> warehouseIns;
 
     @OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL)
-    Set<WarehouseOut> warehouseOuts;
+    List<WarehouseOut> warehouseOuts;
 }
