@@ -15,7 +15,7 @@ import java.util.List;
 public class MedicineGroupManagementController {
     @Autowired
     MedicineGroupService medicineGroupService;
-
+//
     @GetMapping()
     public ResponseEntity<List<MedicineGroup>> getAllMedicineGroup() {
         List<MedicineGroup> list = medicineGroupService.getAllMedicineGroup();
