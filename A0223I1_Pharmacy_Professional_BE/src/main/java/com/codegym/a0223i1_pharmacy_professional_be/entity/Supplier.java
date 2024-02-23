@@ -16,17 +16,25 @@ public class Supplier {
     @Column(name = "supplier_id")
     private String supplierId;
 
+    @Column(columnDefinition = "TEXT")
     private String supplierName;
 
+    @Column(columnDefinition = "TEXT")
     private String address;
 
+    @Column(columnDefinition = "TEXT")
     private String email;
 
+    @Column(columnDefinition = "TEXT")
     private String phoneNumber;
+
+    @Column(columnDefinition = "TEXT")
+    private String note;
 
     private int toPayDebt;
 
-    private boolean deleteFlag;
+    @Column(name = "delete_flag")
+    private Boolean deleteFlag;
 
     @OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL)
     Set<WarehouseIn> warehouseIns;
