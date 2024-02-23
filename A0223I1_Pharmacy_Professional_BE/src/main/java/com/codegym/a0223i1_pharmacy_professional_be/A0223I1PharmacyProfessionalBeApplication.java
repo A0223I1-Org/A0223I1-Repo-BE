@@ -11,4 +11,5 @@ public class A0223I1PharmacyProfessionalBeApplication {
         SpringApplication.run(A0223I1PharmacyProfessionalBeApplication.class, args);
     }
 
+
 }
