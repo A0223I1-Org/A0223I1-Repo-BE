@@ -3,6 +3,7 @@ package com.codegym.a0223i1_pharmacy_professional_be.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -20,5 +21,5 @@ public class MedicineGroup {
     private String medicineGroupName;
 
     @OneToMany(mappedBy = "medicineGroup", cascade = CascadeType.ALL)
-    Set<Medicine> medicines;
+    List<Medicine> medicines;
 }

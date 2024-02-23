@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -26,8 +27,8 @@ public class Cart {
     private Customer customer;
 
     @OneToMany(mappedBy = "cart")
-    Set<Invoice> invoices;
+    List<Invoice> invoices;
 
     @OneToMany(mappedBy = "cart")
-    Set<CartDetail> cartDetails;
+    List<CartDetail> cartDetails;
 }

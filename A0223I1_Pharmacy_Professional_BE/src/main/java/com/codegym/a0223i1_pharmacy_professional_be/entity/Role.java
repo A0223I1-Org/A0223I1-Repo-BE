@@ -1,6 +1,8 @@
 package com.codegym.a0223i1_pharmacy_professional_be.entity;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -17,6 +19,6 @@ public class Role {
     private String name;
 
     @OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
-    Set<AccountRole> accountRoles;
+    List<AccountRole> accountRoles;
 
 }

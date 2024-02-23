@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -62,17 +63,17 @@ public class Medicine {
 
     @OneToMany(mappedBy = "medicine", cascade = CascadeType.ALL)
     @JsonBackReference
-    Set<MedicineImg> medicineImgs;
+    List<MedicineImg> medicineImgs;
 
     @OneToMany(mappedBy = "medicine", cascade = CascadeType.ALL)
     @JsonBackReference
-    Set<CartDetail> cartDetails;
+    List<CartDetail> cartDetails;
 
     @OneToMany(mappedBy = "medicine", cascade = CascadeType.ALL)
     @JsonBackReference
-    Set<InvoiceDetail> invoiceDetails;
+    List<InvoiceDetail> invoiceDetails;
 
     @OneToMany(mappedBy = "medicine")
     @JsonBackReference
-    Set<PrescriptionDetail> prescriptionDetails;
+    List<PrescriptionDetail> prescriptionDetails;
 }
