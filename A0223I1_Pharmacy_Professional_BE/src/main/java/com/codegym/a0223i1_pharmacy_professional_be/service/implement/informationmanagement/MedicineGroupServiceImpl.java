@@ -31,7 +31,7 @@ public class MedicineGroupServiceImpl implements MedicineGroupService {
     public void delete(MedicineGroup medicineGroup) {
         medicineGroupRepository.delete(medicineGroup);
     }
-
+//
     @Override
     public MedicineGroup getMedicineGroupById(Long id) {
         return medicineGroupRepository.findById(id).orElse(null);
