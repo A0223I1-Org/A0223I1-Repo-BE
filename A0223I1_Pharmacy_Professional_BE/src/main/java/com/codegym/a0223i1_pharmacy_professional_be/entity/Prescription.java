@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -36,10 +37,10 @@ public class Prescription {
 
     @OneToMany(mappedBy = "prescription")
     @JsonBackReference
-    Set<PrescriptionDetail> prescriptionDetails;
+    List<PrescriptionDetail> prescriptionDetails;
 
     @OneToMany(mappedBy = "prescription")
     @JsonBackReference
-    Set<Invoice> invoices;
+    List<Invoice> invoices;
 
 }

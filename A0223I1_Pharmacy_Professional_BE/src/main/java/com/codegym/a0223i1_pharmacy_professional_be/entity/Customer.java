@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -42,5 +43,5 @@ public class Customer {
     private Cart cart;
 
     @OneToMany(mappedBy = "customer")
-    Set<Invoice> invoices;
+    List<Invoice> invoices;
 }
