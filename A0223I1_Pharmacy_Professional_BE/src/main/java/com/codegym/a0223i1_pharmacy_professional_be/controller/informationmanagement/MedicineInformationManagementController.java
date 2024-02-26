@@ -24,7 +24,7 @@ public class MedicineInformationManagementController {
     private IMedicineService medicineService2;
 
 
-    @GetMapping()
+    @GetMapping("")
     public ResponseEntity<List<Medicine>> getAllMedicine() {
         return new ResponseEntity<>(medicineService.getAllMedicine(), HttpStatus.OK);
     }

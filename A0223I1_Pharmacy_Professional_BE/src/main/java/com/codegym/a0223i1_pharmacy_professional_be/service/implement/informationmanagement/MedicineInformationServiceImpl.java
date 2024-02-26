@@ -14,16 +14,16 @@ public class MedicineInformationServiceImpl implements MedicineInformationServic
 
     @Override
     public List<Medicine> getAllMedicine() {
-        return medicineInformationRepository.findAll();
+        return medicineInformationRepository.getAllMedicine();
     }
 
     @Override
     public Medicine findMedicineById(String id) {
-        return medicineInformationRepository.findById(id).orElse(null);
+        return medicineInformationRepository.getMedicineById(id);
     }
 
     @Override
     public void deleteMedicine(Medicine medicine) {
-        medicineInformationRepository.delete(medicine);
+        medicineInformationRepository.deleteMedicine(medicine.getMedicineId());
     }
 }
