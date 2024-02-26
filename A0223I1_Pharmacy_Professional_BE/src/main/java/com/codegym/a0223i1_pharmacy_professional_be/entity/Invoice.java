@@ -19,7 +19,7 @@ public class Invoice {
     @Column(name = "invoice_id")
     private String invoiceId;
 
-    private String status;
+    private Integer status;
     private String note;
 
     @Column(name = "invoice_type")
