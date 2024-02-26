@@ -17,7 +17,7 @@ public class MedicineInformationManagementController {
     @Autowired
     MedicineInformationService medicineService;
 
-    @GetMapping()
+    @GetMapping("")
     public ResponseEntity<List<Medicine>> getAllMedicine() {
         return new ResponseEntity<>(medicineService.getAllMedicine(), HttpStatus.OK);
     }

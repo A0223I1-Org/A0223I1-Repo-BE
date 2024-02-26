@@ -4,6 +4,7 @@ import com.codegym.a0223i1_pharmacy_professional_be.entity.MedicineGroup;
 import com.codegym.a0223i1_pharmacy_professional_be.service.interfaceservice.informationmanagement.MedicineGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +17,7 @@ public class MedicineGroupManagementController {
     @Autowired
     MedicineGroupService medicineGroupService;
 //
-    @GetMapping()
+    @GetMapping("")
     public ResponseEntity<List<MedicineGroup>> getAllMedicineGroup() {
         List<MedicineGroup> list = medicineGroupService.getAllMedicineGroup();
         return new ResponseEntity<>(list, HttpStatus.OK);
@@ -29,13 +30,13 @@ public class MedicineGroupManagementController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<MedicineGroup> getMGById(@PathVariable Long id) {
+    public ResponseEntity<MedicineGroup> getMGById(@PathVariable Integer id) {
         MedicineGroup medicineGroup = medicineGroupService.getMedicineGroupById(id);
         return new ResponseEntity<>(medicineGroup, HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateMG(@PathVariable Long id, @RequestBody MedicineGroup medicineGroup) {
+    public ResponseEntity<String> updateMG(@PathVariable Integer id, @RequestBody MedicineGroup medicineGroup) {
         System.out.println(id);
         MedicineGroup existingMG = medicineGroupService.getMedicineGroupById(id);
 
@@ -51,9 +52,10 @@ public class MedicineGroupManagementController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteMGById(@PathVariable Long id) {
+    public ResponseEntity<String> deleteMGById(@PathVariable Integer id) {
         System.out.println(id);
         MedicineGroup existingMG = medicineGroupService.getMedicineGroupById(id);
+        System.out.println(existingMG.getMedicineGroupId());
 
         if (existingMG == null) {
             return new ResponseEntity<>("Không tìm thấy Medicine Group có ID: " + id, HttpStatus.NOT_FOUND);
