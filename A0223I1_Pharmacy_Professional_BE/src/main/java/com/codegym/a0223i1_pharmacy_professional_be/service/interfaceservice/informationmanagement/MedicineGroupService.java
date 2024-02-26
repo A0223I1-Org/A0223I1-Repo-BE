@@ -10,5 +10,5 @@ public interface MedicineGroupService {
     void create(MedicineGroup medicineGroup);
     void update(MedicineGroup medicineGroup);
     void delete(MedicineGroup medicineGroup);
-    MedicineGroup getMedicineGroupById(Long id);
+    MedicineGroup getMedicineGroupById(Integer id);
 }
