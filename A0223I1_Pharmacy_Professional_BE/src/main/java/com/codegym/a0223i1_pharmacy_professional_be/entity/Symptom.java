@@ -13,7 +13,7 @@ public class Symptom {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "symptom_id")
-    private int symptomId;
+    private Integer symptomId;
 
     private String symptomName;
 }
