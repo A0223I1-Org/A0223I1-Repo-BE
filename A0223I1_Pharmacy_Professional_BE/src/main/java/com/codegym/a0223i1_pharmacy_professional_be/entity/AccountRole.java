@@ -26,7 +26,8 @@ public class AccountRole {
             CascadeType.PERSIST, CascadeType.MERGE,
             CascadeType.DETACH, CascadeType.REFRESH
     })
-    @JoinColumn(name = "account_id", referencedColumnName = "account_id" )
+
+    @JoinColumn(name = "account_id", referencedColumnName = "account_id")
     @JsonBackReference
     private Account account;
 }

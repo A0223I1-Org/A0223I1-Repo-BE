@@ -21,14 +21,14 @@ public class EmployeeService implements IEmployeeService {
     public void save(Employee employee) {
         iEmployeeRepository.save(employee.getEmployeeId(),employee.getEmployeeName(),employee.getPhoneNumber(),
                 employee.getDateStart(),employee.getAddress(),employee.getNote(),employee.getSalary(),
-                employee.getImage());
+                employee.getImage(), employee.getAccount().getAccountId());
     }
 
     @Override
     public void update(Employee employee) {
         iEmployeeRepository.update(employee.getEmployeeId(),employee.getEmployeeName(),employee.getPhoneNumber(),
                 employee.getDateStart(),employee.getAddress(),employee.getNote(),employee.getSalary(),
-                employee.getImage());
+                employee.getImage(), employee.getAccount().getAccountId());
     }
 
     @Override
