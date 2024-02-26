@@ -2,6 +2,10 @@ package com.codegym.a0223i1_pharmacy_professional_be.controller.informationmanag
 
 import com.codegym.a0223i1_pharmacy_professional_be.entity.Medicine;
 import com.codegym.a0223i1_pharmacy_professional_be.service.interfaceservice.informationmanagement.MedicineInformationService;
+import com.codegym.a0223i1_pharmacy_professional_be.dto.MedicineDto;
+import com.codegym.a0223i1_pharmacy_professional_be.entity.Medicine;
+import com.codegym.a0223i1_pharmacy_professional_be.service.interfaceservice.informationmanagement.IMedicineService;
+import jakarta.xml.ws.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,15 +20,20 @@ public class MedicineInformationManagementController {
     //
     @Autowired
     MedicineInformationService medicineService;
+    @Autowired
+    private IMedicineService medicineService2;
+
 
     @GetMapping("")
     public ResponseEntity<List<Medicine>> getAllMedicine() {
         return new ResponseEntity<>(medicineService.getAllMedicine(), HttpStatus.OK);
     }
 
+
+
     @GetMapping("/{id}")
-    public ResponseEntity<Medicine> getMedicineById(@PathVariable String id) {
-        return new ResponseEntity<>(medicineService.findMedicineById(id), HttpStatus.OK);
+    public ResponseEntity<MedicineDto> getMedicineById(@PathVariable String id) {
+        return new ResponseEntity<>(medicineService2.findMedicineById(id), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
@@ -39,5 +48,7 @@ public class MedicineInformationManagementController {
 
         medicineService.deleteMedicine(existingMedicine);
         return new ResponseEntity<>("success", HttpStatus.OK);
+
+
     }
 }

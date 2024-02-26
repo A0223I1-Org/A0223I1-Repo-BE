@@ -25,9 +25,9 @@ public class Supplier {
 
     private String phoneNumber;
 
-    private int toPayDebt;
+    private Long toPayDebt;
 
-    private boolean deleteFlag;
+    private Boolean deleteFlag;
 
     @OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL)
     List<WarehouseIn> warehouseIns;
