@@ -19,10 +19,14 @@ public class EmployeeDto {
 
     private String image;
 
+    private String email;
+    private String password;
+    private Long role_id;
+
     public EmployeeDto() {
     }
 
-    public EmployeeDto(String employeeId, String employeeName, String phoneNumber, Date dateStart, String address, String note, int salary, String image) {
+    public EmployeeDto(String employeeId, String employeeName, String phoneNumber, Date dateStart, String address, String note, int salary, String image, String email, String password, Long role_id) {
         this.employeeId = employeeId;
         this.employeeName = employeeName;
         this.phoneNumber = phoneNumber;
@@ -31,6 +35,9 @@ public class EmployeeDto {
         this.note = note;
         this.salary = salary;
         this.image = image;
+        this.email = email;
+        this.password = password;
+        this.role_id = role_id;
     }
 
     public String getEmployeeId() {
@@ -95,5 +102,29 @@ public class EmployeeDto {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Long getRole_id() {
+        return role_id;
+    }
+
+    public void setRole_id(Long role_id) {
+        this.role_id = role_id;
     }
 }
