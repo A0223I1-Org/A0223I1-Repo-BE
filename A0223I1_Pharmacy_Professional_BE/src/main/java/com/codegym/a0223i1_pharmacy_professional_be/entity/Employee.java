@@ -30,6 +30,8 @@ public class Employee {
 
     private int salary;
 
+    private String image;
+
     @JsonBackReference(value = "account")
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "account_id", referencedColumnName = "account_id")
