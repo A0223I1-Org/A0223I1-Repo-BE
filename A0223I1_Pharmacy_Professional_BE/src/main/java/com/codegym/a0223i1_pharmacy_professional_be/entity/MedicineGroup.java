@@ -1,5 +1,7 @@
 package com.codegym.a0223i1_pharmacy_professional_be.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,6 +22,7 @@ public class MedicineGroup {
 
     private String medicineGroupName;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "medicineGroup", cascade = CascadeType.ALL)
     List<Medicine> medicines;
 }

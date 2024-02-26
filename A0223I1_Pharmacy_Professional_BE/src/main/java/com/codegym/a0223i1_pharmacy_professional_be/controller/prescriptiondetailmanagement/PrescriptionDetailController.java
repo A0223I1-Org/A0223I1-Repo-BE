@@ -6,10 +6,10 @@ import com.codegym.a0223i1_pharmacy_professional_be.entity.Medicine;
 import com.codegym.a0223i1_pharmacy_professional_be.entity.Prescription;
 import com.codegym.a0223i1_pharmacy_professional_be.entity.PrescriptionDetail;
 import com.codegym.a0223i1_pharmacy_professional_be.entity.Symptom;
-import com.codegym.a0223i1_pharmacy_professional_be.service.implement.medicinemanagement.MedicineService;
 import com.codegym.a0223i1_pharmacy_professional_be.service.implement.prescriptionmanagement.PrescriptionDetailService;
 import com.codegym.a0223i1_pharmacy_professional_be.service.implement.prescriptionmanagement.PrescriptionService;
 import com.codegym.a0223i1_pharmacy_professional_be.service.implement.prescriptionmanagement.SymptomService;
+import com.codegym.a0223i1_pharmacy_professional_be.service.interfaceservice.informationmanagement.MedicineInformationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,11 +25,11 @@ public class PrescriptionDetailController {
 
     private PrescriptionService prescriptionService;
     private PrescriptionDetailService detailPrescriptionService;
-    private MedicineService medicineService;
+    private MedicineInformationService medicineService;
     private SymptomService symptomService;
 
     @Autowired
-    public PrescriptionDetailController(PrescriptionService prescriptionService, PrescriptionDetailService detailPrescriptionService, MedicineService medicineService, SymptomService symptomService) {
+    public PrescriptionDetailController(PrescriptionService prescriptionService, PrescriptionDetailService detailPrescriptionService, MedicineInformationService medicineService, SymptomService symptomService) {
         this.prescriptionService = prescriptionService;
         this.detailPrescriptionService = detailPrescriptionService;
         this.medicineService = medicineService;
@@ -82,7 +82,7 @@ public class PrescriptionDetailController {
         detailPrescription.setPrescription(prescription);
 
 
-        Medicine medicine = medicineService.findById2(detailPrescriptionDTO.getMedicineId());
+        Medicine medicine = medicineService.findMedicineById(detailPrescriptionDTO.getMedicineId());
         detailPrescription.setMedicine(medicine);
 
         PrescriptionDetail save = detailPrescriptionService.save(detailPrescription);
@@ -104,7 +104,7 @@ public class PrescriptionDetailController {
 
 
         PrescriptionDetail existingDetailPrescription = detailPrescriptionService.findById(id);
-        Medicine existingMedicine = medicineService.findById2(detailPrescriptionDTO.getMedicineId());
+        Medicine existingMedicine = medicineService.findMedicineById(detailPrescriptionDTO.getMedicineId());
         Prescription existingPrescription = prescriptionService.findPrescriptionById(detailPrescriptionDTO.getPrescription().getPrescriptionId());
         Symptom existingSymptom = symptomService.findSymptomByPrescriptionId(detailPrescriptionDTO.getPrescription().getPrescriptionId());
 
