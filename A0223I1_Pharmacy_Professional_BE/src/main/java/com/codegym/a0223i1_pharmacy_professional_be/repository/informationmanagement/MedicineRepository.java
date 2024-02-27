@@ -17,9 +17,13 @@ import java.util.Optional;
 @Transactional
 public interface MedicineRepository extends JpaRepository<Medicine, String> {
 
-
     @Query("SELECT m FROM Medicine m JOIN FETCH m.medicineImgs WHERE m.medicineId = :id")
     Medicine findMedicineByMedicineId(String id);
 
+    @Query(value = "select id, name from medicine where id= :id", nativeQuery = true)
+    Optional<Medicine> findById(@Param("id") String id);
+
+    @Query("SELECT m FROM Medicine m JOIN FETCH m.medicineImgs WHERE m.medicineId = :id")
+    Medicine findMedicineByMedicineId(String id);
 }
 
