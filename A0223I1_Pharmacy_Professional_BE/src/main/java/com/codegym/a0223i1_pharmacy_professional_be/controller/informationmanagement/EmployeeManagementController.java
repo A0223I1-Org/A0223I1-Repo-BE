@@ -20,8 +20,10 @@ import java.util.List;
 public class EmployeeManagementController {
     @Autowired
     IEmployeeService iEmployeeService;
+
     @Autowired
     IRoleService iRoleService;
+
     @GetMapping("/list")
     public ResponseEntity<List<Employee>> findAll(){
         List<Employee> employeeList = iEmployeeService.findAll();
@@ -35,11 +37,12 @@ public class EmployeeManagementController {
         if(employeeDto == null){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
+      
         Account account = new Account();
         account.setEmail(employeeDto.getEmail());
         account.setPassword(employeeDto.getPassword());
         account.setDeleteFlag(false);
-
+      
         Employee employee = new Employee();
         employee.setEmployeeId(employeeDto.getEmployeeId());
         employee.setEmployeeName(employeeDto.getEmployeeName());
@@ -58,8 +61,10 @@ public class EmployeeManagementController {
         accountRole.setAccount(account);
         accountRole.setRole(role);
 
+        iEmployeeService.save(employee);
         return new ResponseEntity<>(employee,HttpStatus.OK);
     }
+  
     @GetMapping("/{employeeId}")
     public ResponseEntity<Employee> detail(@PathVariable String employeeId){
         Employee employee = iEmployeeService.findById(employeeId);
@@ -68,6 +73,7 @@ public class EmployeeManagementController {
         }
         return new ResponseEntity<>(employee,HttpStatus.OK);
     }
+  
     @PutMapping("/{employeeId}")
     public ResponseEntity<Employee> update(@PathVariable String employeeId, @RequestBody EmployeeDto employeeDto){
         Employee employee = iEmployeeService.findById(employeeId);
@@ -84,6 +90,7 @@ public class EmployeeManagementController {
         iEmployeeService.update(employee);
         return new ResponseEntity<>(employee,HttpStatus.OK);
     }
+  
     @DeleteMapping("/{employeeId}")
     public ResponseEntity<Employee> delete(@PathVariable String employeeId){
         Employee employee = iEmployeeService.findById(employeeId);

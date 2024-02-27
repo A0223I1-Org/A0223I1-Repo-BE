@@ -22,6 +22,7 @@ public class EmployeeService implements IEmployeeService {
         iEmployeeRepository.save(employee.getEmployeeId(),employee.getEmployeeName(),employee.getPhoneNumber(),
                 employee.getDateStart(),employee.getAddress(),employee.getNote(),employee.getSalary(),
                 employee.getImage(), employee.getAccount().getAccountId());
+
     }
 
     @Override
@@ -29,6 +30,7 @@ public class EmployeeService implements IEmployeeService {
         iEmployeeRepository.update(employee.getEmployeeId(),employee.getEmployeeName(),employee.getPhoneNumber(),
                 employee.getDateStart(),employee.getAddress(),employee.getNote(),employee.getSalary(),
                 employee.getImage(), employee.getAccount().getAccountId());
+
     }
 
     @Override
