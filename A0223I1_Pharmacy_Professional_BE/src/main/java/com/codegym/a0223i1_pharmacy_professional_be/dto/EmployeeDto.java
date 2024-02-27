@@ -27,11 +27,15 @@ public class EmployeeDto {
 
     public EmployeeDto(String employeeId, String employeeName, String phoneNumber, Date dateStart, String address, String note, int salary, String image, String email, String password, Long role_id) {
 
+    private String email;
+    private String password;
+    private Long role_id;
+
     public EmployeeDto() {
     }
 
-    public EmployeeDto(String employeeId, String employeeName, String phoneNumber, Date dateStart, String address, String note, int salary, String image) {
 
+    public EmployeeDto(String employeeId, String employeeName, String phoneNumber, Date dateStart, String address, String note, int salary, String image, String email, String password, Long role_id) {
         this.employeeId = employeeId;
         this.employeeName = employeeName;
         this.phoneNumber = phoneNumber;
@@ -40,7 +44,6 @@ public class EmployeeDto {
         this.note = note;
         this.salary = salary;
         this.image = image;
-
         this.email = email;
         this.password = password;
         this.role_id = role_id;

@@ -27,7 +27,7 @@ public interface IEmployeeRepository extends JpaRepository<Employee,String> {
               @Param("salary") int salary,
               @Param("image") String image,
               @Param("account_id")Integer account_id);
-  
+
     @Query(value = "update employee set employee_name = :employeeName, phone_number = :phoneNumber, " +
             "date_start = :dateStart, address = :address, note = :note, salary = :salary, image = :image ,account_id = :account_id " +
             "where employee_id = :employeeId", nativeQuery = true)
@@ -40,7 +40,7 @@ public interface IEmployeeRepository extends JpaRepository<Employee,String> {
                 @Param("salary") int salary,
                 @Param("image") String image,
                 @Param("account_id") Integer account_id);
-  
+
     @Query(value = "select employee_id, employee_name, phone_number, date_start, address, note, salary, image " +
             "from employee where employee_id like :employeeId", nativeQuery = true)
     Optional<Employee> findById(@Param("employeeId") String employeeId);
