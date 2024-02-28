@@ -3,14 +3,13 @@ package com.codegym.a0223i1_pharmacy_professional_be.service.implement.customerm
 
 import com.codegym.a0223i1_pharmacy_professional_be.dto.IInvoiceDTO;
 import com.codegym.a0223i1_pharmacy_professional_be.entity.Customer;
-import com.codegym.a0223i1_pharmacy_professional_be.entity.Invoice;
 import com.codegym.a0223i1_pharmacy_professional_be.repository.customermanagement.ICustomerRepository;
 import com.codegym.a0223i1_pharmacy_professional_be.service.interfaceservice.customermanagement.ICustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import com.codegym.a0223i1_pharmacy_professional_be.dto.CustomerDTO;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import java.util.List;
 
 @Service
@@ -19,12 +18,10 @@ public class CustomerServiceImpl implements ICustomerService {
     @Autowired
     private ICustomerRepository iCustomerRepository;
 
-   @Autowired
-    private ICustomerRepository customerRepository;
   
     @Override
-    public Customer getCustomerById(String id) {
-        return iCustomerRepository.getCustomerById(id);
+    public Customer getCustomerByIdd(String id) {
+        return iCustomerRepository.getCustomerByIdd(id);
     }
 
     @Override
@@ -43,25 +40,41 @@ public class CustomerServiceImpl implements ICustomerService {
 
   @Override
     public void createCustomer(CustomerDTO customerDTO) {
-        customerRepository.createCustomer(customerDTO.getCustomerId(),customerDTO.getCustomerName(),customerDTO.getAge(),
+      iCustomerRepository.createCustomer(customerDTO.getCustomerId(),customerDTO.getCustomerName(),customerDTO.getAge(),
                                         customerDTO.getAddress(),customerDTO.getPhoneNumber(),
                                         customerDTO.getCustomerType(),customerDTO.getNote(),customerDTO.getAccountId());
     }
 
     @Override
     public Customer getCustomerById(String customerId) {
-        return customerRepository.getCustomerById(customerId);
+        return iCustomerRepository.getCustomerByIdd(customerId);
     }
 
     @Override
     public Customer findCustomerById(String customerId) {
-        return customerRepository.findCustomerById(customerId);
+        return iCustomerRepository.findCustomerById(customerId);
     }
 
     @Override
     public void updateCustomer(CustomerDTO customerDTO) {
-        customerRepository.updateCustomer(customerDTO.getCustomerName(),customerDTO.getAge(),
+        iCustomerRepository.updateCustomer(customerDTO.getCustomerName(),customerDTO.getAge(),
                 customerDTO.getAddress(),customerDTO.getPhoneNumber(),
                 customerDTO.getCustomerType(),customerDTO.getNote(),customerDTO.getAccountId(), customerDTO.getCustomerId());
     }
+
+    @Override
+    public List<Customer> getCustomersByName(String customerName) {
+        return iCustomerRepository.getCustomersByName(customerName);
+    }
+
+    @Override
+    public List<Customer> getCustomersByAge(Integer age) {
+        return iCustomerRepository.getCustomersByAge(age);
+    }
+
+    @Override
+    public List<Customer> getCustomersByType(String customerType) {
+        return iCustomerRepository.getCustomersByType(customerType);
+    }
+}
 

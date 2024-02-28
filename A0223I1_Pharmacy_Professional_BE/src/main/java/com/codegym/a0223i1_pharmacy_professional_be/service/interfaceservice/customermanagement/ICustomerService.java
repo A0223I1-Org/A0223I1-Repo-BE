@@ -3,13 +3,10 @@ package com.codegym.a0223i1_pharmacy_professional_be.service.interfaceservice.cu
 
 import com.codegym.a0223i1_pharmacy_professional_be.dto.IInvoiceDTO;
 import com.codegym.a0223i1_pharmacy_professional_be.entity.Customer;
-import com.codegym.a0223i1_pharmacy_professional_be.entity.Invoice;
 import com.codegym.a0223i1_pharmacy_professional_be.dto.CustomerDTO;
 import org.springframework.data.domain.*;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
-
 
 public interface ICustomerService {
     Customer getCustomerById(String id);
@@ -20,12 +17,18 @@ public interface ICustomerService {
 
     void createCustomer(CustomerDTO customerDTO);
   
-    Customer getCustomerById(String customerId);
+    Customer getCustomerByIdd(String customerId);
   
     Customer findCustomerById(String customerId);
   
     void updateCustomer(CustomerDTO customerDTO);
-  
+
+    List<Customer> getCustomersByName(String customerName);
+
+    List<Customer> getCustomersByAge(Integer age);
+
+    List<Customer> getCustomersByType(String customerType);
+
 }
 
 

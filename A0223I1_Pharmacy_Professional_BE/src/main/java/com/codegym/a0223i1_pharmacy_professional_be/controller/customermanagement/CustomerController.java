@@ -15,8 +15,6 @@ import java.util.List;
 @RestController
 
 public class CustomerController {
-
-
     @Autowired
     private ICustomerService iCustomerService;
 
@@ -39,7 +37,7 @@ public class CustomerController {
 
     @GetMapping(value = "/getCustomerById/{id}")
     public ResponseEntity<?> findCustomerById(@PathVariable String id){
-        Customer customer = iCustomerService.getCustomerById(id);
+        Customer customer = iCustomerService.getCustomerByIdd(id);
         if (customer == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
