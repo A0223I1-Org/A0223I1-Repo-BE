@@ -1,5 +1,6 @@
 package com.codegym.a0223i1_pharmacy_professional_be.service.implement.supplier;
 
+import com.codegym.a0223i1_pharmacy_professional_be.dto.SupplierDTO;
 import com.codegym.a0223i1_pharmacy_professional_be.entity.Supplier;
 import com.codegym.a0223i1_pharmacy_professional_be.repository.supplier.ISupplierRepository;
 import com.codegym.a0223i1_pharmacy_professional_be.service.interfaceservice.supplier.ISupplierService;
@@ -66,12 +67,15 @@ public class SupplierServiceImpl implements ISupplierService {
     }
 
     @Override
-    public void addNewSupplier(String supplierId, String supplierName, String address, String email, String phoneNumber, String note) {
-        supplierRepository.addNewSupplier(supplierId, supplierName, address, email, phoneNumber, note);
+    public void addNewSupplier(SupplierDTO supplierDTO) {
+        supplierRepository.addNewSupplier(supplierDTO.getSupplierId(), supplierDTO.getSupplierName(), supplierDTO.getAddress(), supplierDTO.getEmail(), supplierDTO.getPhoneNumber(), supplierDTO.getNote(), 0,0);
     }
 
     @Override
-    public void editSupplier(String newId, String supplierName, String address, String email, String phoneNumber, String note, String oldId) {
-        supplierRepository.editSupplier(newId, supplierName, address, email, phoneNumber, note, oldId);
+    public void editSupplier(SupplierDTO supplierDTO, String oldId) {
+        Supplier existingSupplier = supplierRepository.findSupplierById(oldId);
+        if (existingSupplier != null) {
+            supplierRepository.editSupplier(supplierDTO.getSupplierId(), supplierDTO.getSupplierName(), supplierDTO.getAddress(), supplierDTO.getEmail(), supplierDTO.getPhoneNumber(), supplierDTO.getNote(), Boolean.compare(supplierDTO.getDeleteFlag(), false), supplierDTO.getToPayDebt(), oldId);
+        }
     }
 }

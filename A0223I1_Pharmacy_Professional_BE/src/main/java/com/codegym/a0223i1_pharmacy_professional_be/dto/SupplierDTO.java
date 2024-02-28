@@ -17,4 +17,14 @@ public class SupplierDTO {
 
     private int toPayDebt;
     private Boolean deleteFlag;
+
+    public SupplierDTO(String supplierId, String supplierName, String address, String email, String phoneNumber, String note) {
+        this.supplierId = supplierId;
+        this.supplierName = supplierName;
+        this.address = address;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.note = note;
+    }
+
 }

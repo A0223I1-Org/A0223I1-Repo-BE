@@ -31,6 +31,7 @@ public class Supplier {
     @Column(columnDefinition = "TEXT")
     private String note;
 
+    @Column(name = "to_pay_debt")
     private int toPayDebt;
 
     @Column(name = "delete_flag")
@@ -41,4 +42,24 @@ public class Supplier {
 
     @OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL)
     Set<WarehouseOut> warehouseOuts;
+
+    public Supplier(String supplierId, String supplierName, String address, String email, String phoneNumber, String note) {
+        this.supplierId = supplierId;
+        this.supplierName = supplierName;
+        this.address = address;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.note = note;
+    }
+
+    public Supplier(String supplierId, String supplierName, String address, String email, String phoneNumber, String note, int toPayDebt, Boolean deleteFlag) {
+        this.supplierId = supplierId;
+        this.supplierName = supplierName;
+        this.address = address;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.note = note;
+        this.toPayDebt = toPayDebt;
+        this.deleteFlag = deleteFlag;
+    }
 }
