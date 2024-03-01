@@ -6,6 +6,7 @@ import lombok.extern.apachecommons.CommonsLog;
 
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 @Getter
 @Setter
@@ -18,7 +19,7 @@ public class Invoice {
     @Column(name = "invoice_id")
     private String invoiceId;
 
-    private String status;
+    private Integer status;
     private String note;
 
     @Column(name = "invoice_type")
@@ -46,5 +47,5 @@ public class Invoice {
     private Cart cart;
 
     @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL)
-    Set<InvoiceDetail> invoiceDetails;
+    List<InvoiceDetail> invoiceDetails;
 }

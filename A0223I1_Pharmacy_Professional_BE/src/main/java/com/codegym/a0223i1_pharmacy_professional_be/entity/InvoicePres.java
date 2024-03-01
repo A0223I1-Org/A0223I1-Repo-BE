@@ -3,6 +3,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -42,5 +43,5 @@ public class InvoicePres {
     private Float total;
 
     @OneToMany(mappedBy = "invoicePres", cascade = CascadeType.ALL)
-    Set<InvoiceDetail> invoiceDetails;
+    List<InvoiceDetail> invoiceDetails;
 }
