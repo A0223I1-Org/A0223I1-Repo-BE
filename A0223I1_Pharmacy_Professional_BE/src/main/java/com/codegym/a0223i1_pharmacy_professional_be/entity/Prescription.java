@@ -35,6 +35,9 @@ public class Prescription {
 
     private Boolean deleteFlag;
 
+    @Transient
+    private String symptomName;
+
     @OneToMany(mappedBy = "prescription")
     @JsonBackReference
     List<PrescriptionDetail> prescriptionDetails;

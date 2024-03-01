@@ -44,8 +44,13 @@ dependencies {
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
     testImplementation 'org.springframework.security:spring-security-test'
 
+    implementation 'io.jsonwebtoken:jjwt:0.9.1'
+    implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.1.1'
+
+
     implementation 'org.apache.poi:poi:5.0.0'
     implementation 'org.apache.poi:poi-ooxml:5.0.0'
+
 }
 
 tasks.named('test') {

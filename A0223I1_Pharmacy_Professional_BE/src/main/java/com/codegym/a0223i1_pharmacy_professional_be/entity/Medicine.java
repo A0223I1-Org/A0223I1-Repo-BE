@@ -76,7 +76,4 @@ public class Medicine {
     @JsonBackReference
     List<InvoiceDetail> invoiceDetails;
 
-    @OneToMany(mappedBy = "medicine")
-    @JsonBackReference
-    List<PrescriptionDetail> prescriptionDetails;
 }
