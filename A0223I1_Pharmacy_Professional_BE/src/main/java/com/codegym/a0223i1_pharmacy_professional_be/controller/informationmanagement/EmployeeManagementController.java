@@ -37,12 +37,12 @@ public class EmployeeManagementController {
         if(employeeDto == null){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-      
+
         Account account = new Account();
         account.setEmail(employeeDto.getEmail());
         account.setPassword(employeeDto.getPassword());
         account.setDeleteFlag(false);
-      
+
         Employee employee = new Employee();
         employee.setEmployeeId(employeeDto.getEmployeeId());
         employee.setEmployeeName(employeeDto.getEmployeeName());
@@ -53,6 +53,7 @@ public class EmployeeManagementController {
         employee.setSalary(employeeDto.getSalary());
         employee.setImage(employeeDto.getImage());
         employee.setAccount(account);
+
         iEmployeeService.save(employee);
 
         Role role = iRoleService.findById(employeeDto.getRole_id());
@@ -61,7 +62,6 @@ public class EmployeeManagementController {
         accountRole.setAccount(account);
         accountRole.setRole(role);
 
-        iEmployeeService.save(employee);
         return new ResponseEntity<>(employee,HttpStatus.OK);
     }
   
