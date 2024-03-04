@@ -19,13 +19,13 @@ public interface ICustomerService {
     List<IInvoiceDTO> getAllInvoiceCustomer(String id);
 
     void createCustomer(CustomerDTO customerDTO);
-  
+
     Customer getCustomerById(String customerId);
-  
+
     Customer findCustomerById(String customerId);
-  
+
     void updateCustomer(CustomerDTO customerDTO);
-  
+
 }
 
 

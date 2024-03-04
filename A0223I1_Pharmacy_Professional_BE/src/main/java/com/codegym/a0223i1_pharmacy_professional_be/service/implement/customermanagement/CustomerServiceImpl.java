@@ -21,7 +21,7 @@ public class CustomerServiceImpl implements ICustomerService {
 
    @Autowired
     private ICustomerRepository customerRepository;
-  
+
     @Override
     public Customer getCustomerById(String id) {
         return iCustomerRepository.getCustomerById(id);
