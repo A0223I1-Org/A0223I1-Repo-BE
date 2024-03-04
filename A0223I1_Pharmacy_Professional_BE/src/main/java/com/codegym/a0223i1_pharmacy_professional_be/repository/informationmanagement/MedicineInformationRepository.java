@@ -5,8 +5,10 @@ import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface MedicineInformationRepository extends JpaRepository<Medicine, String> {
 
@@ -20,4 +22,10 @@ public interface MedicineInformationRepository extends JpaRepository<Medicine, S
     @Transactional
     @Query(value = "DELETE FROM medicine WHERE medicine_id = :medicineId", nativeQuery = true)
     void deleteMedicine(String medicineId);
+
+    @Query("SELECT m FROM Medicine m JOIN FETCH m.medicineImgs WHERE m.medicineId = :id")
+    Medicine findMedicineByMedicineId(String id);
+
+    @Query(value = "select id, name from medicine where id= :id", nativeQuery = true)
+    Optional<Medicine> findById(@Param("id") String id);
 }

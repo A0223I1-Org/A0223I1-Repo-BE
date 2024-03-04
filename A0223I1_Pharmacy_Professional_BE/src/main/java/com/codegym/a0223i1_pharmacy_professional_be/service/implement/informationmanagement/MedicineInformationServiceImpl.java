@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+
 @Service
 public class MedicineInformationServiceImpl implements MedicineInformationService {
     @Autowired
@@ -25,5 +27,15 @@ public class MedicineInformationServiceImpl implements MedicineInformationServic
     @Override
     public void deleteMedicine(Medicine medicine) {
         medicineInformationRepository.deleteMedicine(medicine.getMedicineId());
+    }
+
+    @Override
+    public Optional<Medicine> findById(String id) {
+        return medicineInformationRepository.findById(id);
+    }
+
+    public Medicine findById2(String id) {
+        Optional<Medicine> optionalMedicine = medicineInformationRepository.findById(id);
+        return optionalMedicine.orElse(null);
     }
 }

@@ -1,11 +1,9 @@
 package com.codegym.a0223i1_pharmacy_professional_be.controller.informationmanagement;
 
 import com.codegym.a0223i1_pharmacy_professional_be.entity.Medicine;
+import com.codegym.a0223i1_pharmacy_professional_be.service.interfaceservice.informationmanagement.IMedicineService;
 import com.codegym.a0223i1_pharmacy_professional_be.service.interfaceservice.informationmanagement.MedicineInformationService;
 import com.codegym.a0223i1_pharmacy_professional_be.dto.MedicineDto;
-import com.codegym.a0223i1_pharmacy_professional_be.entity.Medicine;
-import com.codegym.a0223i1_pharmacy_professional_be.service.interfaceservice.informationmanagement.IMedicineService;
-import jakarta.xml.ws.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

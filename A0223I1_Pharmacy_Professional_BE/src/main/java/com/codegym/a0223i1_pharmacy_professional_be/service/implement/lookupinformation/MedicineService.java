@@ -2,20 +2,16 @@ package com.codegym.a0223i1_pharmacy_professional_be.service.implement.lookupinf
 
 import com.codegym.a0223i1_pharmacy_professional_be.dto.MedicineDto;
 import com.codegym.a0223i1_pharmacy_professional_be.entity.Medicine;
-import com.codegym.a0223i1_pharmacy_professional_be.repository.informationmanagement.MedicineRepository;
 import com.codegym.a0223i1_pharmacy_professional_be.service.interfaceservice.informationmanagement.IMedicineService;
+import com.codegym.a0223i1_pharmacy_professional_be.repository.informationmanagement.MedicineInformationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.modelmapper.ModelMapper;
-
-
-import java.util.List;
 
 @Service
 public class MedicineService implements IMedicineService {
 
     @Autowired
-    private MedicineRepository medicineRepository;
+    private MedicineInformationRepository medicineRepository;
 
 //    ModelMapper mapper = new ModelMapper();
 
