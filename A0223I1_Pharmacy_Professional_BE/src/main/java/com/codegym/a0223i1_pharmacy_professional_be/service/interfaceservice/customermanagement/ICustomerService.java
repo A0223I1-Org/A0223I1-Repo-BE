@@ -20,7 +20,7 @@ public interface ICustomerService {
 
     void createCustomer(CustomerDTO customerDTO);
   
-    Customer getCustomerById(String customerId);
+   // Customer getCustomerById(String customerId);
   
     Customer findCustomerById(String customerId);
   

@@ -48,21 +48,16 @@ public interface ICustomerRepository extends JpaRepository<Customer, Integer> {
             "INNER JOIN `account` ON customer.account_id = `account`.account_id\n" +
             "WHERE customer.customer_id= ?1 and `account`.delete_flag = 0\n", nativeQuery = true)
     List<IInvoiceDTO> getAllInvoiceCustomer(String id);
-
-}
-
-@Repository
-@Transactional
-public interface ICustomerRepository extends JpaRepository<Customer,String> {
     @Modifying
     @Query(value = "insert into customer(customer.customer_id,customer.customer_name,customer.age,customer.address,customer.phone_number," +
             "customer.customer_type, customer.note, customer.account_id) value(?1,?2,?3,?4,?5,?6,?7,?8)",nativeQuery = true)
     void createCustomer(String customerId,String customerName, int customerAge, String address, String phone, String customerType, String note, int accountId);
 
-    @Modifying
-    @Query(value = "select customer.customer_id as customerId, customer.customer_name,customer.age,customer.address,customer.phone_number," +
-       "customer.customer_type, customer.note, customer.account_id from customer where customer.customer_id = ?1", nativeQuery = true)
-    Customer getCustomerById(String customerId);
+//    @Modifying
+//    @Query(value = "select customer.customer_id as customerId, customer.customer_name,customer.age,customer.address,customer.phone_number," +
+//            "customer.customer_type, customer.note, customer.account_id from customer where customer.customer_id = ?1", nativeQuery = true)
+//    Customer getCustomerById(String customerId);
+
 //    @Modifying
 //    @Query(value="select customer.customer_id ,customer.customer_name as customerName ,customer.age,customer.address,customer.phone_number," +
 //            "customer.customer_type, customer.note, customer.account_id from customer where customer.customer_name = ?1", nativeQuery = true)
@@ -83,4 +78,6 @@ public interface ICustomerRepository extends JpaRepository<Customer,String> {
             "where customer.customer_id = ?8",nativeQuery = true)
     void updateCustomer(String name, int age, String address, String phone, String type, String note, int accountId,String customerId);
 }
+
+
 

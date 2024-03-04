@@ -19,18 +19,19 @@ public class CustomerServiceImpl implements ICustomerService {
     @Autowired
     private ICustomerRepository iCustomerRepository;
 
-   @Autowired
+    @Autowired
     private ICustomerRepository customerRepository;
-  
+
     @Override
     public Customer getCustomerById(String id) {
         return iCustomerRepository.getCustomerById(id);
     }
 
     @Override
-    public Page<Customer> getAllCustomer( String find, Pageable pageable) {
-        return iCustomerRepository.getAllCustomer( pageable);
+    public Page<Customer> getAllCustomer(String find, Pageable pageable) {
+        return iCustomerRepository.getAllCustomer(pageable);
     }
+
     @Override
     public void deleteCustomer(String id) {
         iCustomerRepository.deleteCustomer(id);
@@ -41,17 +42,17 @@ public class CustomerServiceImpl implements ICustomerService {
         return iCustomerRepository.getAllInvoiceCustomer(id);
     }
 
-  @Override
+    @Override
     public void createCustomer(CustomerDTO customerDTO) {
-        customerRepository.createCustomer(customerDTO.getCustomerId(),customerDTO.getCustomerName(),customerDTO.getAge(),
-                                        customerDTO.getAddress(),customerDTO.getPhoneNumber(),
-                                        customerDTO.getCustomerType(),customerDTO.getNote(),customerDTO.getAccountId());
+        customerRepository.createCustomer(customerDTO.getCustomerId(), customerDTO.getCustomerName(), customerDTO.getAge(),
+                customerDTO.getAddress(), customerDTO.getPhoneNumber(),
+                customerDTO.getCustomerType(), customerDTO.getNote(), customerDTO.getAccountId());
     }
 
-    @Override
-    public Customer getCustomerById(String customerId) {
-        return customerRepository.getCustomerById(customerId);
-    }
+//    @Override
+//    public Customer getCustomerById(String customerId) {
+//        return customerRepository.getCustomerById(customerId);
+//    }
 
     @Override
     public Customer findCustomerById(String customerId) {
@@ -60,8 +61,8 @@ public class CustomerServiceImpl implements ICustomerService {
 
     @Override
     public void updateCustomer(CustomerDTO customerDTO) {
-        customerRepository.updateCustomer(customerDTO.getCustomerName(),customerDTO.getAge(),
-                customerDTO.getAddress(),customerDTO.getPhoneNumber(),
-                customerDTO.getCustomerType(),customerDTO.getNote(),customerDTO.getAccountId(), customerDTO.getCustomerId());
+        customerRepository.updateCustomer(customerDTO.getCustomerName(), customerDTO.getAge(),
+                customerDTO.getAddress(), customerDTO.getPhoneNumber(),
+                customerDTO.getCustomerType(), customerDTO.getNote(), customerDTO.getAccountId(), customerDTO.getCustomerId());
     }
-
+}
