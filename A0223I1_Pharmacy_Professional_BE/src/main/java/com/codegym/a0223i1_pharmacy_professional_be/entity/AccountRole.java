@@ -28,7 +28,6 @@ public class AccountRole {
             CascadeType.DETACH, CascadeType.REFRESH
     })
 
-
     @JoinColumn(name = "account_id", referencedColumnName = "account_id")
     @JsonBackReference
     private Account account;
