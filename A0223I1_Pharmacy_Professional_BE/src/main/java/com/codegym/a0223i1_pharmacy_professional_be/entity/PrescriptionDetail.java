@@ -28,4 +28,6 @@ public class PrescriptionDetail {
     private String quantity;
 
     private String quantityPerTimes;
+    private String medicineList;
+
 }
