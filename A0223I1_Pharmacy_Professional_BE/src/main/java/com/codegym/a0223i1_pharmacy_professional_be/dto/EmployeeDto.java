@@ -34,7 +34,6 @@ public class EmployeeDto {
     public EmployeeDto() {
     }
 
-
     public EmployeeDto(String employeeId, String employeeName, String phoneNumber, Date dateStart, String address, String note, int salary, String image, String email, String password, Long role_id) {
         this.employeeId = employeeId;
         this.employeeName = employeeName;
