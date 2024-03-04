@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -31,6 +32,7 @@ public class Medicine {
     private String activeIngredient;
 
     private String unit;
+    private Integer conversionRate;
 
     private String conversionUnit;
 
@@ -42,11 +44,13 @@ public class Medicine {
 
     private Float retailPrice;
 
+
     private Float supplierDiscount;
 
     private Float profitMarginWholesale;
 
     private Float profitMarginRetail;
+
 
     @ManyToOne(cascade = {
             CascadeType.PERSIST, CascadeType.MERGE,
@@ -62,17 +66,14 @@ public class Medicine {
 
     @OneToMany(mappedBy = "medicine", cascade = CascadeType.ALL)
     @JsonBackReference
-    Set<MedicineImg> medicineImgs;
+    List<MedicineImg> medicineImgs;
 
     @OneToMany(mappedBy = "medicine", cascade = CascadeType.ALL)
     @JsonBackReference
-    Set<CartDetail> cartDetails;
+    List<CartDetail> cartDetails;
 
     @OneToMany(mappedBy = "medicine", cascade = CascadeType.ALL)
     @JsonBackReference
-    Set<InvoiceDetail> invoiceDetails;
+    List<InvoiceDetail> invoiceDetails;
 
-    @OneToMany(mappedBy = "medicine")
-    @JsonBackReference
-    Set<PrescriptionDetail> prescriptionDetails;
 }

@@ -2,6 +2,8 @@ package com.codegym.a0223i1_pharmacy_professional_be.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -25,7 +27,7 @@ public class Account {
     private Boolean deleteFlag;
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
-    Set<AccountRole> accountRoles;
+    List<AccountRole> accountRoles;
 
     @OneToOne(cascade = CascadeType.ALL, optional = true, mappedBy = "account")
     private Customer customer;

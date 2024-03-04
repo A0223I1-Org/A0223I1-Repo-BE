@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -34,12 +35,15 @@ public class Prescription {
 
     private Boolean deleteFlag;
 
-    @OneToMany(mappedBy = "prescription")
-    @JsonBackReference
-    Set<PrescriptionDetail> prescriptionDetails;
+    @Transient
+    private String symptomName;
 
     @OneToMany(mappedBy = "prescription")
     @JsonBackReference
-    Set<Invoice> invoices;
+    List<PrescriptionDetail> prescriptionDetails;
+
+    @OneToMany(mappedBy = "prescription")
+    @JsonBackReference
+    List<Invoice> invoices;
 
 }

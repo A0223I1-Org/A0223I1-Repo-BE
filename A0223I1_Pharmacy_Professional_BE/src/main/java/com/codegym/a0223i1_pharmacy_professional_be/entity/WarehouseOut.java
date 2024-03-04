@@ -2,6 +2,7 @@ package com.codegym.a0223i1_pharmacy_professional_be.entity;
 
 
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Set;
 import jakarta.persistence.*;
 import lombok.*;
@@ -38,5 +39,5 @@ public class WarehouseOut {
     private Employee employee;
 
     @OneToMany(mappedBy = "warehouseOut")
-    Set<WarehouseOutDetail> warehouseOutDetails;
+    List<WarehouseOutDetail> warehouseOutDetails;
 }
