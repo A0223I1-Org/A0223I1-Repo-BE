@@ -20,8 +20,5 @@ public interface MedicineRepository extends JpaRepository<Medicine, String> {
     @Query("SELECT m FROM Medicine m JOIN FETCH m.medicineImgs WHERE m.medicineId = :id")
     Medicine findMedicineByMedicineId(String id);
 
-
-    @Query("SELECT m FROM Medicine m JOIN FETCH m.medicineImgs WHERE m.medicineId = :id")
-    Medicine findMedicineByMedicineId(String id);
 }
 

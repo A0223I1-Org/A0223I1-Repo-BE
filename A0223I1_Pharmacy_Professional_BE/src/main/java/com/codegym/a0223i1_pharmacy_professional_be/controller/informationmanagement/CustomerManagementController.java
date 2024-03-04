@@ -18,7 +18,6 @@ public class CustomerManagementController {
     @Autowired
     private ICustomerService customerService;
 
-
     @Autowired
     private CustomerValidate customerValidate;
 
