@@ -35,8 +35,6 @@ public class SupplierValidate {
             errors.put("errorIdEmpty","Mã nhà cung cấp không được trống!");
         } else if (supplierDTO.getSupplierId().length() > 50) {
             errors.put("errorIdLength","Mã nhà cung cấp không được quá 50 ký tự");
-        } else if (!PATTERN_ID.matcher(supplierDTO.getSupplierId()).matches()) {
-            errors.put("errorIdSpecialCharacter","Mã nhà cung cấp không được chứa các kí tự đặc biệt");
         } else if (!isSupplierIdUnique(supplierDTO.getSupplierId())) {
             errors.put("errorIdNotUnique","Mã nhà cung cấp đã tồn tại");
         }
@@ -46,9 +44,6 @@ public class SupplierValidate {
         }
         if (supplierDTO.getSupplierName().length() > 50) {
             errors.put("errorNameLength","Tên nhà cung cấp không được quá 50 ký tự");
-        }
-        if (!PATTERN_NAME.matcher(supplierDTO.getSupplierName()).matches()) {
-            errors.put("errorNameSpecialCharacter","Tên nhà cung cấp không được chứa các kí tự đặc biệt");
         }
 
 
@@ -62,9 +57,6 @@ public class SupplierValidate {
 
         if (supplierDTO.getAddress().length() > 50) {
             errors.put("errorAddressLength","Địa chỉ không được quá 50 ký tự");
-        }
-        if (!PATTERN_ADDRESS.matcher(supplierDTO.getAddress()).matches()) {
-            errors.put("errorAddressFormat","Địa chỉ không hợp lệ");
         }
 
 

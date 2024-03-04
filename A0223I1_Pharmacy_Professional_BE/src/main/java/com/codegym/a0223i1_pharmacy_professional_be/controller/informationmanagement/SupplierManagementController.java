@@ -24,16 +24,33 @@ public class SupplierManagementController {
     @Autowired
     private SupplierValidate supplierValidate;
 
-    @GetMapping
+    @GetMapping("/listSupplier")
     public ResponseEntity<Page<Supplier>> getAllSuppliers(@RequestParam(required = false) String orderBy,
                                                           @RequestParam(required = false) String searchType,
                                                           @RequestParam(required = false) String searchValue,
                                                           Pageable pageable) {
         Page<Supplier> suppliers;
 
-        // Xác định phương thức tìm kiếm mặc định
-        if (orderBy != null && !orderBy.isEmpty()) {
-            switch (orderBy.toLowerCase()) {
+        if (searchType != null && !searchType.isEmpty() && searchValue != null && !searchValue.isEmpty()) {
+            switch (searchType) {
+                case "supplierId":
+                    suppliers = supplierService.findAllBySupplierId(searchValue, pageable);
+                    break;
+                case "supplierName":
+                    suppliers = supplierService.findAllBySupplierName(searchValue, pageable);
+                    break;
+                case "address":
+                    suppliers = supplierService.findAllByAddress(searchValue, pageable);
+                    break;
+                case "phoneNumber":
+                    suppliers = supplierService.findAllByPhoneNumber(searchValue, pageable);
+                    break;
+                default:
+                    suppliers = supplierService.findAllOrderBySupplierId(pageable);
+                    break;
+            }
+        } else if (orderBy != null && !orderBy.isEmpty()) {
+            switch (orderBy) {
                 case "supplierName":
                     suppliers = supplierService.findAllOrderBySupplierName(pageable);
                     break;
@@ -51,62 +68,35 @@ public class SupplierManagementController {
             suppliers = supplierService.findAllOrderBySupplierId(pageable);
         }
 
-        // Nếu có loại tìm kiếm và giá trị tìm kiếm, áp dụng tìm kiếm
-        if (searchType != null && searchValue != null && !searchType.isEmpty() && !searchValue.isEmpty()) {
-            switch (searchType.toLowerCase()) {
-                case "supplierId":
-                    suppliers = supplierService.findAllBySupplierId(searchValue, pageable);
-                    break;
-                case "supplierName":
-                    suppliers = supplierService.findAllBySupplierName(searchValue, pageable);
-                    break;
-                case "address":
-                    suppliers = supplierService.findAllByAddress(searchValue, pageable);
-                    break;
-                case "phoneNumber":
-                    suppliers = supplierService.findAllByPhoneNumber(searchValue, pageable);
-                    break;
-                default:
-                    suppliers = supplierService.findAllOrderBySupplierId(pageable);
-                    break;
-            }
-        }
-
-        // Nếu không có kết quả, trả về trang rỗng
-        if (suppliers.isEmpty()) {
-            suppliers = Page.empty();
-        }
-
-        return ResponseEntity.ok().body(suppliers);
+        return new ResponseEntity<>(suppliers, HttpStatus.OK);
     }
 
 
     @PostMapping("/addSupplier")
     public ResponseEntity<?> addSupplier(@RequestBody SupplierDTO supplierDTO) {
-        if(supplierDTO == null){
-            return new ResponseEntity<SupplierDTO>(HttpStatus.BAD_REQUEST);
+        if (supplierDTO == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        else {
-            Map<String,String> errors = supplierValidate.validate(supplierDTO);
-            if(errors.isEmpty()){
-                supplierService.addNewSupplier(supplierDTO);
-                return new ResponseEntity<>(supplierDTO, HttpStatus.OK);
-            }else {
-                return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
-            }
+
+        Map<String, String> errors = supplierValidate.validate(supplierDTO);
+        if (errors.isEmpty()) {
+            supplierService.addNewSupplier(supplierDTO);
+            return new ResponseEntity<>(supplierDTO, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
         }
     }
 
-    @GetMapping( "/getSupplierById/{id}")
-    public ResponseEntity<Supplier> findSupplierById(@PathVariable String id){
+    @GetMapping("/getSupplierById/{id}")
+    public ResponseEntity<?> findSupplierById(@PathVariable String id) {
         Supplier supplier = supplierService.findSupplierById(id);
-        if(supplier == null){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        else {
-            return new ResponseEntity<>(supplier,HttpStatus.OK);
+        if (supplier == null) {
+            return new ResponseEntity<>("không tìm thấy nhà cung cấp nào", HttpStatus.NOT_FOUND);
+        } else {
+            return new ResponseEntity<>(supplier, HttpStatus.OK);
         }
     }
+
 
     @PostMapping("/updateSupplier/{id}")
     public ResponseEntity<?> updateSupplier(@PathVariable("id") String id, @RequestBody SupplierDTO supplierDTO){
