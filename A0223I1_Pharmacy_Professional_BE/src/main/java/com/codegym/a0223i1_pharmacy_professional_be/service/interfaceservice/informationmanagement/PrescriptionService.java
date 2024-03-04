@@ -1,5 +1,4 @@
-package com.codegym.a0223i1_pharmacy_professional_be.service.implement.prescriptionmanagement;
-
+package com.codegym.a0223i1_pharmacy_professional_be.service.interfaceservice.informationmanagement;
 
 import com.codegym.a0223i1_pharmacy_professional_be.entity.Prescription;
 import com.codegym.a0223i1_pharmacy_professional_be.entity.Symptom;

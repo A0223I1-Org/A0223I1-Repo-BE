@@ -1,18 +1,15 @@
-package com.codegym.a0223i1_pharmacy_professional_be.service.interfaceservice.prescriptionmanagement;
-
-
+package com.codegym.a0223i1_pharmacy_professional_be.service.implement.informationmanagement;
 
 import com.codegym.a0223i1_pharmacy_professional_be.entity.Prescription;
 import com.codegym.a0223i1_pharmacy_professional_be.entity.Symptom;
-import com.codegym.a0223i1_pharmacy_professional_be.repository.prescriptionmanagement.PrescriptionRepository;
-import com.codegym.a0223i1_pharmacy_professional_be.repository.prescriptionmanagement.SymptomRepository;
-import com.codegym.a0223i1_pharmacy_professional_be.service.implement.prescriptionmanagement.PrescriptionService;
+import com.codegym.a0223i1_pharmacy_professional_be.repository.informationmanagement.PrescriptionRepository;
+import com.codegym.a0223i1_pharmacy_professional_be.repository.informationmanagement.SymptomRepository;
+import com.codegym.a0223i1_pharmacy_professional_be.service.interfaceservice.informationmanagement.PrescriptionService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
 
 @Service
 public class PrescriptionServiceImpl implements PrescriptionService {
@@ -28,9 +25,9 @@ public class PrescriptionServiceImpl implements PrescriptionService {
 
     @Override
     public List<Prescription> findAll() {
-     return prescriptionRepository.findAllPrescription();
+        return prescriptionRepository.findAllPrescription();
     }
-    
+
     @Override
     @Transactional
     public Prescription addPrescription(Prescription prescription, Symptom symptom) {
@@ -69,6 +66,8 @@ public class PrescriptionServiceImpl implements PrescriptionService {
     public Prescription findPrescriptionByDetailId(Long id) {
         return prescriptionRepository.findPrescriptionByDetailId(id);
     }
+
+
 
     @Override
     public  String generateNextCode() {
