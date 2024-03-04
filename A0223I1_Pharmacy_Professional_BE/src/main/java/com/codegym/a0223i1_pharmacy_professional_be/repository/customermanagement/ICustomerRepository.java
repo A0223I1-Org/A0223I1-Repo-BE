@@ -67,7 +67,7 @@ public interface ICustomerRepository extends JpaRepository<Customer,String> {
     void createCustomer(String customerId,String customerName, int customerAge, String address, String phone, String customerType, String note, int accountId);
 
     @Query(value = "select customer.customer_id , customer.customer_name,customer.age,customer.address,customer.phone_number," +
-            "customer.customer_type, customer.note, customer.account_id from customer where customer.customer_id = ?1", nativeQuery = true)
+             "customer.customer_type, customer.note, customer.account_id from customer where customer.customer_id = ?1", nativeQuery = true)
     Customer findCustomerById(String customerId);
 
     @Modifying
@@ -77,4 +77,6 @@ public interface ICustomerRepository extends JpaRepository<Customer,String> {
             "where customer.customer_id = ?7",nativeQuery = true)
     void updateCustomer(String name, int age, String address, String phone, String type, String note, String customerId);
 }
+
+
 

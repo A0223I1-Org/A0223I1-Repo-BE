@@ -26,9 +26,11 @@ public class CustomerServiceImpl implements ICustomerService {
     }
 
     @Override
+
     public Page<Customer> getAllCustomerByName(String customerName, Pageable pageable) {
         return iCustomerRepository.getAllCustomerByName(customerName,pageable);
     }
+
     @Override
     public Page<Customer> getAllCustomerByAge(Integer customerAge, Pageable pageable) {
         return iCustomerRepository.getAllCustomerByAge(customerAge,pageable);
@@ -54,6 +56,7 @@ public class CustomerServiceImpl implements ICustomerService {
                 customerDTO.getAddress(), customerDTO.getPhoneNumber(),
                 customerDTO.getCustomerType(), customerDTO.getNote(), customerDTO.getAccountId());
     }
+
 
     @Override
     public Customer getCustomerById(String customerId) {
