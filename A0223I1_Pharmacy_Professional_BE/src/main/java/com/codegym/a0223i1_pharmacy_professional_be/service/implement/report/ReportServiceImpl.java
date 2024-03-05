@@ -46,13 +46,18 @@ public class ReportServiceImpl implements IReportService {
     }
 
     @Override
-    public List<ISupplierDTO> getDebtSuppliers() {
-        return iReportRepository.getDebtSuppliers();
+    public List<ISupplierDTO> getDebtSuppliers(String startDay, String endDay, String startHour, String endHour) {
+        return iReportRepository.getDebtSuppliers(startDay,endDay,startHour,endHour);
     }
 
     @Override
-    public List<IRevenueProfitDTO> getRevenueAndProfit(String chartType, String startDate, String endDate) {
-        return iReportRepository.getRevenueAndProfit(chartType, startDate, endDate);
+    public List<IRevenueProfitDTO> getRevenueAndProfit(String startDate, String endDate) {
+        return iReportRepository.getRevenueAndProfit(startDate, endDate);
+    }
+
+    @Override
+    public List<IRevenueProfitDTO> getRevenueAndProfitByYear(String startDate, String endDate) {
+        return iReportRepository.getRevenueAndProfitByYear(startDate, endDate);
     }
 
 }
