@@ -97,12 +97,7 @@ public class PrescriptionManagementController {
 //        prescription.setDetailPrescriptions(detailPrescriptionDTO.getPrescription().getDetailPrescriptions());
         prescription.setSymptom(symptom);
 
-
-
         detailPrescription.setPrescription(prescription);
-
-
-
 
         PrescriptionDetail save = detailPrescriptionService.save(detailPrescription);
 

@@ -17,12 +17,15 @@ public interface IReportService {
 
     List<ISalesDiaryDTO> salesDiary(String startDay, String endDay, String startHour, String endHour);
 
-    List<ISupplierDTO> getDebtSuppliers();
+    List<ISupplierDTO> getDebtSuppliers(String startDay, String endDay, String startHour, String endHour);
 
     List<IRevenueDTO> revenue(String startDay, String endDay, String startHour, String endHour);
 
     List<IRevenueDTO> profit(String startDay, String endDay, String startHour, String endHour);
 
-    List<IRevenueProfitDTO> getRevenueAndProfit(String chartType, String startDate, String endDate);
+    List<IRevenueProfitDTO> getRevenueAndProfit(String startDate, String endDate);
+
+    List<IRevenueProfitDTO> getRevenueAndProfitByYear(String startDate, String endDate);
+
 
 }
