@@ -32,6 +32,7 @@ public class Medicine {
     private String activeIngredient;
 
     private String unit;
+    private Integer conversionRate;
 
     private String conversionUnit;
 
@@ -43,11 +44,13 @@ public class Medicine {
 
     private Float retailPrice;
 
+
     private Float supplierDiscount;
 
     private Float profitMarginWholesale;
 
     private Float profitMarginRetail;
+
 
     @ManyToOne(cascade = {
             CascadeType.PERSIST, CascadeType.MERGE,
@@ -73,7 +76,4 @@ public class Medicine {
     @JsonBackReference
     List<InvoiceDetail> invoiceDetails;
 
-    @OneToMany(mappedBy = "medicine")
-    @JsonBackReference
-    List<PrescriptionDetail> prescriptionDetails;
 }

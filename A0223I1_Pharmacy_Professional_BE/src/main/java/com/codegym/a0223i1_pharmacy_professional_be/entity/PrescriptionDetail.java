@@ -19,13 +19,6 @@ public class PrescriptionDetail {
             CascadeType.PERSIST, CascadeType.MERGE,
             CascadeType.DETACH, CascadeType.REFRESH
     })
-    @JoinColumn(name = "medicine_id", referencedColumnName ="medicine_id")
-    private Medicine medicine;
-
-    @ManyToOne(cascade = {
-            CascadeType.PERSIST, CascadeType.MERGE,
-            CascadeType.DETACH, CascadeType.REFRESH
-    })
     @JoinColumn(name = "prescription_id", referencedColumnName ="prescription_id")
     @JsonBackReference
     private Prescription prescription;
@@ -35,4 +28,6 @@ public class PrescriptionDetail {
     private String quantity;
 
     private String quantityPerTimes;
+    private String medicineList;
+
 }
