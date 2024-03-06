@@ -76,4 +76,24 @@ public class Medicine {
     @JsonBackReference
     List<InvoiceDetail> invoiceDetails;
 
+    public Medicine(String medicineId, MedicineGroup medicineGroup, String medicineName, String material, String activeIngredient, String unit, Integer conversionRate, String conversionUnit, Integer quantity, Float importPrice, Float wholesalePrice, Float retailPrice, Float supplierDiscount, Float profitMarginWholesale, Float profitMarginRetail, Supplier supplier, String origin, String status) {
+        this.medicineId = medicineId;
+        this.medicineGroup = medicineGroup;
+        this.medicineName = medicineName;
+        this.material = material;
+        this.activeIngredient = activeIngredient;
+        this.unit = unit;
+        this.conversionRate = conversionRate;
+        this.conversionUnit = conversionUnit;
+        this.quantity = quantity;
+        this.importPrice = importPrice;
+        this.wholesalePrice = wholesalePrice;
+        this.retailPrice = retailPrice;
+        this.supplierDiscount = supplierDiscount;
+        this.profitMarginWholesale = profitMarginWholesale;
+        this.profitMarginRetail = profitMarginRetail;
+        this.supplier = supplier;
+        this.origin = origin;
+        this.status = status;
+    }
 }
