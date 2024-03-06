@@ -75,7 +75,7 @@ public class SupplierServiceImpl implements ISupplierService {
     public void editSupplier(SupplierDTO supplierDTO, String oldId) {
         Supplier existingSupplier = supplierRepository.findSupplierById(oldId);
         if (existingSupplier != null) {
-            supplierRepository.editSupplier(supplierDTO.getSupplierId(), supplierDTO.getSupplierName(), supplierDTO.getAddress(), supplierDTO.getEmail(), supplierDTO.getPhoneNumber(), supplierDTO.getNote(), Boolean.compare(supplierDTO.getDeleteFlag(), false), supplierDTO.getToPayDebt(), oldId);
+            supplierRepository.editSupplier(supplierDTO.getSupplierId(), supplierDTO.getSupplierName(), supplierDTO.getAddress(), supplierDTO.getEmail(), supplierDTO.getPhoneNumber(), supplierDTO.getNote(), 0, supplierDTO.getToPayDebt(), oldId);
         }
     }
 }

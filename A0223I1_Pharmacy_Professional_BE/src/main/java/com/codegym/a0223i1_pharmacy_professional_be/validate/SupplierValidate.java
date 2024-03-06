@@ -22,10 +22,6 @@ public class SupplierValidate {
     private final Pattern PATTERN_EMAIL = Pattern.compile("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$");
     private final Pattern PATTERN_PHONE = Pattern.compile("^[0-9]+$");
 
-    public boolean isSupplierIdUnique(String supplierId) {
-        Supplier existingSupplier = supplierRepository.findSupplierById(supplierId);
-        return existingSupplier == null;
-    }
 
     public Map<String,String> validate(SupplierDTO supplierDTO) {
         Map<String,String> errors = new HashMap<>();
@@ -35,8 +31,6 @@ public class SupplierValidate {
             errors.put("errorIdEmpty","Mã nhà cung cấp không được trống!");
         } else if (supplierDTO.getSupplierId().length() > 50) {
             errors.put("errorIdLength","Mã nhà cung cấp không được quá 50 ký tự");
-        } else if (!isSupplierIdUnique(supplierDTO.getSupplierId())) {
-            errors.put("errorIdNotUnique","Mã nhà cung cấp đã tồn tại");
         }
 
         if (supplierDTO.getSupplierName() == null || supplierDTO.getSupplierName().isEmpty()) {

@@ -77,13 +77,17 @@ public class SupplierManagementController {
         if (supplierDTO == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-
-        Map<String, String> errors = supplierValidate.validate(supplierDTO);
-        if (errors.isEmpty()) {
-            supplierService.addNewSupplier(supplierDTO);
-            return new ResponseEntity<>(supplierDTO, HttpStatus.OK);
+        Supplier supplier = supplierService.findSupplierById(supplierDTO.getSupplierId());
+        if (supplier != null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
-            return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+            Map<String, String> errors = supplierValidate.validate(supplierDTO);
+            if (errors.isEmpty()) {
+                supplierService.addNewSupplier(supplierDTO);
+                return new ResponseEntity<>(supplierDTO, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+            }
         }
     }
 
