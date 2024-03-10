@@ -2,7 +2,7 @@ package com.codegym.a0223i1_pharmacy_professional_be.controller.informationmanag
 
 import com.codegym.a0223i1_pharmacy_professional_be.dto.SupplierDTO;
 import com.codegym.a0223i1_pharmacy_professional_be.entity.Supplier;
-import com.codegym.a0223i1_pharmacy_professional_be.service.interfaceservice.supplier.ISupplierService;
+import com.codegym.a0223i1_pharmacy_professional_be.service.interfaceservice.informationmanagement.ISupplierService;
 import com.codegym.a0223i1_pharmacy_professional_be.validate.SupplierValidate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

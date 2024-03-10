@@ -18,7 +18,8 @@ public class AccountRole {
             CascadeType.PERSIST, CascadeType.MERGE,
             CascadeType.DETACH, CascadeType.REFRESH
     })
-    @JoinColumn(name = "role_id", referencedColumnName = "roleId", unique = true)
+
+    @JoinColumn(name = "role_id", referencedColumnName = "roleId")
     @JsonBackReference
     private Role role;
 
@@ -26,7 +27,8 @@ public class AccountRole {
             CascadeType.PERSIST, CascadeType.MERGE,
             CascadeType.DETACH, CascadeType.REFRESH
     })
-    @JoinColumn(name = "account_id", referencedColumnName = "account_id", unique = true)
+
+    @JoinColumn(name = "account_id", referencedColumnName = "account_id")
     @JsonBackReference
     private Account account;
 }

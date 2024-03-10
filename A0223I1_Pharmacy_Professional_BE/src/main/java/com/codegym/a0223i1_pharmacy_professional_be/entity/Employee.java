@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -29,17 +30,19 @@ public class Employee {
 
     private int salary;
 
+    private String image;
+
     @JsonBackReference(value = "account")
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "account_id", referencedColumnName = "account_id")
     private Account account;
 
     @OneToMany(mappedBy = "employee")
-    Set<Invoice> invoices;
+    List<Invoice> invoices;
 
     @OneToMany(mappedBy = "employee")
-    Set<WarehouseIn> warehouseIns;
+    List<WarehouseIn> warehouseIns;
 
     @OneToMany(mappedBy = "employee")
-    Set<WarehouseOut> warehouseOuts;
+    List<WarehouseOut> warehouseOuts;
 }

@@ -2,7 +2,7 @@ package com.codegym.a0223i1_pharmacy_professional_be.validate;
 
 import com.codegym.a0223i1_pharmacy_professional_be.dto.SupplierDTO;
 import com.codegym.a0223i1_pharmacy_professional_be.entity.Supplier;
-import com.codegym.a0223i1_pharmacy_professional_be.repository.supplier.ISupplierRepository;
+import com.codegym.a0223i1_pharmacy_professional_be.repository.informationmanagement.ISupplierRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

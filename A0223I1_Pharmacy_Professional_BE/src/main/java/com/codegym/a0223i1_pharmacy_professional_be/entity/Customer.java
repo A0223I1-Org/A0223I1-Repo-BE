@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -38,9 +39,10 @@ public class Customer {
     @JoinColumn(name = "account_id", referencedColumnName = "account_id")
     private Account account;
 
+    @JsonBackReference
     @OneToOne(cascade = CascadeType.ALL, optional = true, mappedBy = "customer")
     private Cart cart;
-
+    @JsonBackReference
     @OneToMany(mappedBy = "customer")
-    Set<Invoice> invoices;
+    List<Invoice> invoices;
 }
