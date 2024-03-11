@@ -11,4 +11,6 @@ public interface MedicineInformationService {
     Medicine findMedicineById(String id);
     void deleteMedicine(Medicine medicine);
     Optional<Medicine> findById(String id);
+    Medicine findById2(String id);
+
 }

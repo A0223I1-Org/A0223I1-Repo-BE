@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 @Service
-public class AccountService implements IAccountService {
+public class AccountServiceImpl implements IAccountService {
     @Autowired
     IAccountRepository iAccountRepository;
     @Override
@@ -19,6 +19,11 @@ public class AccountService implements IAccountService {
     @Override
     public void save(Account account) {
         iAccountRepository.save(account);
+    }
+
+    @Override
+    public Account registerAccount(Account account) {
+        return iAccountRepository.save(account);
     }
 
     @Override

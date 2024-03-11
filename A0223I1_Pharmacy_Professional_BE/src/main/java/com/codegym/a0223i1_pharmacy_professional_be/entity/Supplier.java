@@ -17,21 +17,52 @@ public class Supplier {
     @Column(name = "supplier_id")
     private String supplierId;
 
+    @Column(columnDefinition = "TEXT")
     private String supplierName;
 
+    @Column(columnDefinition = "TEXT")
     private String address;
 
+    @Column(columnDefinition = "TEXT")
     private String email;
 
+    @Column(columnDefinition = "TEXT")
     private String phoneNumber;
 
-    private Long toPayDebt;
 
+    @Column(columnDefinition = "TEXT")
+    private String note;
+
+    @Column(name = "to_pay_debt")
+    private int toPayDebt;
+
+    @Column(name = "delete_flag")
     private Boolean deleteFlag;
 
     @OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL)
     List<WarehouseIn> warehouseIns;
 
     @OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL)
-    List<WarehouseOut> warehouseOuts;
+    Set<WarehouseOut> warehouseOuts;
+
+    public Supplier(String supplierId, String supplierName, String address, String email, String phoneNumber, String note) {
+        this.supplierId = supplierId;
+        this.supplierName = supplierName;
+        this.address = address;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.note = note;
+    }
+
+    public Supplier(String supplierId, String supplierName, String address, String email, String phoneNumber, String note, int toPayDebt, Boolean deleteFlag) {
+        this.supplierId = supplierId;
+        this.supplierName = supplierName;
+        this.address = address;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.note = note;
+        this.toPayDebt = toPayDebt;
+        this.deleteFlag = deleteFlag;
+    }
+
 }
