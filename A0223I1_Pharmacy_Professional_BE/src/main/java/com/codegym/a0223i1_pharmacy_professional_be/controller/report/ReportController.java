@@ -60,61 +60,15 @@ public class ReportController {
         }
     }
 
-    private ResponseEntity<?> profit
-            (String startDate, String endDate, String startTime, String endTime) throws IOException {
-        List<IRevenueDTO> profit = iReportService.profit(startDate, endDate, startTime, endTime);
-        if (profit.isEmpty()) {
-            String message = "Không có dữ liệu lợi nhuận trong khoảng thời gian đã chọn";
-            return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
-        }
-        String[] columnNames = {"Thời gian", "Lợi nhuận"};
-        writeWorkbook(profit, columnNames, "Lợi nhuận", "D:\\loinhuan.xlsx");
-        String successMessage = "Báo cáo lợi nhuận đã được xuất thành công trong khoảng thời gian đã chọn";
-        return new ResponseEntity<>(successMessage, HttpStatus.OK);
-    }
-
-    private ResponseEntity<?> revenue
-            (String startDate, String endDate, String startTime, String endTime) throws IOException {
-        List<IRevenueDTO> revenue = iReportService.revenue(startDate, endDate, startTime, endTime);
-        if (revenue.isEmpty()) {
-            return new ResponseEntity<>("Cửa hàng chưa bán đưược trong khoảng thời gian đã chọn", HttpStatus.NOT_FOUND);
-        }
-        String[] columnNames = {"Thời gian", "Doanh thu"};
-        writeWorkbook(revenue, columnNames, "Doanh thu", "D:\\doanhthu.xlsx");
-        return new ResponseEntity<>("Báo cáo doanh thu đã được tạo thành công", HttpStatus.OK);
-    }
-
-    private ResponseEntity<?> getDebtSuppliers
-            (String startDate, String endDate, String startTime, String endTime) throws IOException {
-        List<ISupplierDTO> suppliers = iReportService.getDebtSuppliers(startDate, endDate, startTime, endTime);
-        if (suppliers.isEmpty()) {
-            return new ResponseEntity<>("Hiện không có nhà cung cấp nào có công nợ trong khoảng thời gian đã chọn", HttpStatus.NOT_FOUND);
-        }
-        String[] columnNames = {"Mã nhà cung cấp", "Tên nhà cung cấp", "Địa chỉ", "Email", "Số điện thoại", "Công nợ"};
-        writeWorkbook(suppliers, columnNames, "Nhật ký bán hàng", "D:\\congno.xlsx");
-        return new ResponseEntity<>("Báo cáo công nợ của các nhà cung cấp đã được tạo thành công", HttpStatus.OK);
-    }
-
-    private ResponseEntity<?> salesDiary
-            (String startDate, String endDate, String startTime, String endTime) throws IOException {
-        List<ISalesDiaryDTO> iSalesDiaryDTOS = iReportService.salesDiary(startDate, endDate, startTime, endTime);
-        if (iSalesDiaryDTOS.isEmpty()) {
-            return new ResponseEntity<>("Không có dữ liệu nhật ký bán hàng trong khoảng thời gian đã chọn", HttpStatus.NOT_FOUND);
-        }
-        String[] columnNames = {"Tên nhân viên", "Ngày tạo", "Mã hóa đơn", "Tổng tiền"};
-        writeWorkbook(iSalesDiaryDTOS, columnNames, "Nhật ký bán hàng", "D:\\nhatkybanhang.xlsx");
-        return new ResponseEntity<>("Báo cáo nhật ký bán hàng đã được tạo thành công", HttpStatus.OK);
-    }
-
     private ResponseEntity<?> getAllDrugEnterReport() throws IOException {
         List<Medicine> medicines = iReportService.getListDrugEnter();
         if (medicines.isEmpty()) {
             return new ResponseEntity<>("Hiện không có thuốc nào cần nhập thêm", HttpStatus.NOT_FOUND);
         }
-        String[] columnNames = {"Mã thuốc", "Tên thuốc", "Số lượng"};
-        writeWorkbook(medicines, columnNames, "Thuốc cần nhập thêm", "D:\\thuoccannhapthem.xlsx");
-        return new ResponseEntity<>("Báo cáo thuốc cần nhập thêm đã được tạo thành công", HttpStatus.OK);
-
+        String[] columnNames = {"Mã thuốc", "Tên thuốc", "Số lượng còn lại"};
+        String filePath = "D:\\thuoccannhapthem.xlsx";
+        writeWorkbook(medicines, columnNames, "Thuốc cần nhập thêm", filePath);
+        return new ResponseEntity<>("Báo cáo thuốc cần nhập thêm đã được xuất thành công . File lưu tại: "+filePath, HttpStatus.OK);
     }
 
     private ResponseEntity<?> getAllMedicinesExpiringSoon() throws IOException {
@@ -123,8 +77,9 @@ public class ReportController {
             return new ResponseEntity<>("Hiện không có thuốc nào sắp hết hạn", HttpStatus.NOT_FOUND);
         }
         String[] columnNames = {"Mã thuốc", "Tên thuốc", "Hạn sử dụng"};
-        writeWorkbook(expiredMedicines, columnNames, "Thuốc sắp hết hạn", "D:\\thuocsaphethan.xlsx");
-        return new ResponseEntity<>("Báo cáo thuốc sắp hết hạn đã được tạo thành công", HttpStatus.OK);
+        String filePath = "D:\\thuocsaphethan.xlsx";
+        writeWorkbook(expiredMedicines, columnNames, "Thuốc sắp hết hạn", filePath);
+        return new ResponseEntity<>("Báo cáo thuốc sắp hết hạn đã được xuất thành công. File lưu tại:"+filePath, HttpStatus.OK);
     }
 
     private ResponseEntity<?> findTopSellingMedicines
@@ -132,19 +87,73 @@ public class ReportController {
         List<ITopSellingMedicineDTO> iTopSellingMedicineDTOS = iReportService.findTopSellingMedicines
                 (startDate, endDate, startTime, endTime);
         if (iTopSellingMedicineDTOS.isEmpty()) {
-            return new ResponseEntity<>("Không có thuốc nào được bán trong khoảng thời gian này", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Không có thuốc nào được bán trong khoảng thời gian đã chọn", HttpStatus.NOT_FOUND);
         }
         String[] columnNames = {"Mã thuốc", "Tên thuốc", "Số lượng bán ra"};
-        writeWorkbook(iTopSellingMedicineDTOS, columnNames, "Thuốc bán chạy", "D:\\thuocbanchay.xlsx");
-        return new ResponseEntity<>("Báo cáo thuốc bán chạy đã được tạo thành công", HttpStatus.OK);
+        String filePath = "D:\\thuocbanchay.xlsx";
+        writeWorkbook(iTopSellingMedicineDTOS, columnNames, "Thuốc bán chạy", filePath);
+        return new ResponseEntity<>("Báo cáo thuốc bán chạy đã được xuất thành công. File lưu tại: "+filePath, HttpStatus.OK);
+    }
+
+    private ResponseEntity<?> salesDiary
+            (String startDate, String endDate, String startTime, String endTime) throws IOException {
+        List<ISalesDiaryDTO> iSalesDiaryDTOS = iReportService.salesDiary(startDate, endDate, startTime, endTime);
+        if (iSalesDiaryDTOS.isEmpty()) {
+            return new ResponseEntity<>("Không có dữ liệu nhật ký bán hàng trong khoảng thời gian đã chọn", HttpStatus.NOT_FOUND);
+        }
+        String[] columnNames = {"Mã nhân viên", "Tên nhân viên", "Mã hóa đơn", "Ngày tạo", "Tên bác sĩ", "Số điện thoại", "Triệu chứng", "Chuẩn đoán", "Ghi chú", "Tổng tiền"};
+        writeWorkbook(iSalesDiaryDTOS, columnNames, "Nhật ký bán hàng", "D:\\nhatkybanhang.xlsx");
+        return new ResponseEntity<>("Báo cáo nhật ký bán hàng đã được xuất thành công trong khoảng thời gian đã chọn", HttpStatus.OK);
+    }
+
+    private ResponseEntity<?> getDebtSuppliers
+            (String startDate, String endDate, String startTime, String endTime) throws IOException {
+        List<ISupplierDTO> suppliers = iReportService.getDebtSuppliers(startDate, endDate, startTime, endTime);
+        if (suppliers.isEmpty()) {
+            return new ResponseEntity<>("Hiện không có nhà cung cấp nào có công nợ trong khoảng thời gian đã chọn",
+                    HttpStatus.NOT_FOUND);
+        }
+        String[] columnNames = {"Mã nhà cung cấp", "Tên nhà cung cấp", "Địa chỉ", "Email", "Số điện thoại", "Công nợ"};
+        String filePath = "D:\\congno.xlsx";
+        writeWorkbook(suppliers, columnNames, "Nhật ký bán hàng", filePath);
+        return new ResponseEntity<>("Báo cáo công nợ của các nhà cung cấp đã được xuất thành công. File lưu tại: "+filePath, HttpStatus.OK);
+    }
+
+    private ResponseEntity<?> profit
+            (String startDate, String endDate, String startTime, String endTime) throws IOException {
+        List<IRevenueDTO> profit = iReportService.profit(startDate, endDate, startTime, endTime);
+        boolean allZero = profit.stream().noneMatch(item -> !item.getRevenue().equalsIgnoreCase("0.0") && !item.getRevenue().equals(0.0));
+
+        if (allZero) {
+            String message = "Hiện tại, cửa hàng chưa bán được sản phẩm nào trong khoảng thời gian đã chọn, không có dữ liệu lợi nhuận.";
+            return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+        }
+        String[] columnNames = {"Thời gian", "Lợi nhuận"};
+        String filePath = "D:\\loinhuan.xlsx";
+        writeWorkbook(profit, columnNames, "Lợi nhuận", filePath);
+        String successMessage = "Báo cáo lợi nhuận đã được xuất thành công. File lưu tại: "+filePath;
+        return new ResponseEntity<>(successMessage, HttpStatus.OK);
+    }
+
+    private ResponseEntity<?> revenue
+            (String startDate, String endDate, String startTime, String endTime) throws IOException {
+        List<IRevenueDTO> revenue = iReportService.revenue(startDate, endDate, startTime, endTime);
+        boolean allZero = revenue.stream().noneMatch(item -> !item.getRevenue().equalsIgnoreCase("0.0") && !item.getRevenue().equals(0.0));
+
+        if (allZero) {
+            String message = "Hiện tại, cửa hàng chưa bán được sản phẩm nào trong khoảng thời gian đã chọn, không có dữ liệu doanh thu.";
+            return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+        }
+        String[] columnNames = {"Thời gian", "Doanh thu"};
+        String filePath = "D:\\doanhthu.xlsx";
+
+        writeWorkbook(revenue, columnNames, "Doanh thu", filePath);
+        return new ResponseEntity<>("Báo cáo doanh thu đã được xuất thành công. File lưu tại: "+filePath, HttpStatus.OK);
     }
 
     private void writeWorkbook(List<?> data, String[] columnNames, String sheetName, String fileName)
             throws IOException, FileNotFoundException {
-        try (
-                Workbook workbook = new XSSFWorkbook();
-                FileOutputStream fos = new FileOutputStream(fileName);
-        ) {
+        try (Workbook workbook = new XSSFWorkbook(); FileOutputStream fos = new FileOutputStream(fileName);) {
             Sheet sheet = workbook.createSheet(sheetName);
             Row headerRow = sheet.createRow(0);
             for (int i = 0; i < columnNames.length; i++) {
@@ -170,27 +179,23 @@ public class ReportController {
                 } else if (data.get(i) instanceof IRevenueDTO) {
                     IRevenueDTO revenueDTO = (IRevenueDTO) data.get(i);
                     row.createCell(0).setCellValue(revenueDTO.getDate());
-                    double revenueValue;
-                    if(revenueDTO.getRevenue()==null){
-                        revenueValue=0;
-                    }else {
-                        revenueValue = Double.parseDouble(revenueDTO.getRevenue());
-                    }
-
-                    String revenue = String.format("%,.0f", revenueValue);
-                    revenue = revenue.replace(',', '.');
-                    revenue += " ₫";
-                    Cell revenueCell = row.createCell(1);
-                    revenueCell.setCellValue(revenue);
+                    double revenueValue = revenueDTO.getRevenue() != null ? Double.parseDouble(revenueDTO.getRevenue()) : 0;
+                    String revenue = String.format("%,.0f", revenueValue).replace(',', '.') + " ₫";
+                    row.createCell(1).setCellValue(revenue);
                 } else if (data.get(i) instanceof ISalesDiaryDTO) {
                     ISalesDiaryDTO salesDiaryDTO = (ISalesDiaryDTO) data.get(i);
-                    row.createCell(0).setCellValue(salesDiaryDTO.getEmployeeName());
-                    row.createCell(1).setCellValue(salesDiaryDTO.getDateCreate());
+                    row.createCell(0).setCellValue(salesDiaryDTO.getEmployeeId());
+                    row.createCell(1).setCellValue(salesDiaryDTO.getEmployeeName());
                     row.createCell(2).setCellValue(salesDiaryDTO.getInvoiceId());
-                    String total = String.format("%,.0f", salesDiaryDTO.getTotal());
-                    total = total.replace(',', '.');
-                    total += " ₫";
-                    Cell totalCell = row.createCell(3);
+                    row.createCell(3).setCellValue(salesDiaryDTO.getSaleDate());
+                    row.createCell(4).setCellValue(salesDiaryDTO.getDoctorName());
+                    row.createCell(5).setCellValue(salesDiaryDTO.getDoctorPhone());
+                    row.createCell(6).setCellValue(salesDiaryDTO.getSymptom());
+                    row.createCell(7).setCellValue(salesDiaryDTO.getDoctorDiagnosis());
+                    row.createCell(8).setCellValue(salesDiaryDTO.getNote());
+                    String total = String.format("%,.0f ₫", Double.parseDouble(salesDiaryDTO.getTotalInvoiceAmount()))
+                            .replace(',', '.');
+                    Cell totalCell = row.createCell(9);
                     totalCell.setCellValue(total);
                 } else if (data.get(i) instanceof ISupplierDTO) {
                     ISupplierDTO supplier = (ISupplierDTO) data.get(i);
@@ -199,9 +204,7 @@ public class ReportController {
                     row.createCell(2).setCellValue(supplier.getAddress());
                     row.createCell(3).setCellValue(supplier.getEmail());
                     row.createCell(4).setCellValue(supplier.getPhoneNumber());
-                    String debt = String.format("%,.0f", supplier.getToPayDebt());
-                    debt = debt.replace(',', '.');
-                    debt += " ₫";
+                    String debt = String.format("%,.0f ₫", supplier.getToPayDebt()).replace(',', '.');
                     Cell debtCell = row.createCell(5);
                     debtCell.setCellValue(debt);
                 }
