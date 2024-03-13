@@ -67,6 +67,10 @@ public class PrescriptionServiceImpl implements PrescriptionService {
         return prescriptionRepository.findPrescriptionByDetailId(id);
     }
 
+    @Override
+    public Prescription findPrescriptionByName(String name) {
+        return prescriptionRepository.findPrescriptionByName(name);
+    }
 
 
     @Override

@@ -19,4 +19,6 @@ public interface PrescriptionService {
     Prescription findPrescriptionById(String id);
     void deletePrescription(String id);
     Prescription findPrescriptionByDetailId(Long id);
+    Prescription findPrescriptionByName(String name);
+
 }
