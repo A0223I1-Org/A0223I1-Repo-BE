@@ -40,59 +40,129 @@ public interface IReportRepository extends JpaRepository<Medicine, String> {
 
 
     @Query(nativeQuery = true, value =
-            "SELECT DATE(date_create) as date, SUM(total) as revenue\n" +
-                    "FROM (\n" +
-                    "    SELECT date_create, total\n" +
-                    "    FROM invoice\n" +
-                    "    WHERE (\n" +
-                    "        DATE(date_create)  BETWEEN :startDay AND :endDay AND\n" +
-                    "        TIME(date_create) BETWEEN :startHour AND :endHour\n" +
-                    "    )\n" +
+            "WITH RECURSIVE DateRange AS (\n" +
+                    "    SELECT DATE(:startDay) AS Date\n" +
                     "    UNION ALL\n" +
-                    "    SELECT date_create, total\n" +
-                    "    FROM invoice_pres\n" +
+                    "    SELECT Date + INTERVAL 1 DAY\n" +
+                    "    FROM DateRange\n" +
+                    "    WHERE Date + INTERVAL 1 DAY <= DATE(:endDay)\n" +
+                    ")\n" +
+                    "SELECT d.Date AS date,COALESCE(SUM(combined.revenue), 0) AS revenue\n" +
+                    "FROM DateRange d\n" +
+                    "LEFT JOIN (\n" +
+                    "    SELECT DATE(invoice.date_create) AS date,SUM(invoice_detail.quantity * invoice_detail.price) AS revenue\n" +
+                    "    FROM invoice\n" +
+                    "    JOIN invoice_detail ON invoice.invoice_id = invoice_detail.invoice_id\n" +
+                    "    JOIN medicine ON invoice_detail.medicine_id = medicine.medicine_id\n" +
                     "    WHERE (\n" +
-                    "        DATE(date_create)  BETWEEN :startDay AND :endDay AND\n" +
+                    "        DATE(date_create) BETWEEN :startDay AND :endDay AND\n" +
                     "        TIME(date_create) BETWEEN :startHour AND :endHour\n" +
                     "    )\n" +
-                    ") AS combined\n" +
-                    "GROUP BY date\n" +
-                    "ORDER BY date")
+                    "    GROUP BY date\n" +
+                    "    UNION ALL\n" +
+                    "    SELECT DATE(invoice_pres.date_create) AS date,SUM(invoice_detail.quantity * invoice_detail.price) AS revenue\n" +
+                    "    FROM invoice_pres\n" +
+                    "    JOIN invoice_detail ON invoice_pres.invoice_pres_id = invoice_detail.invoice_pres_id\n" +
+                    "    JOIN medicine ON invoice_detail.medicine_id = medicine.medicine_id\n" +
+                    "    WHERE (\n" +
+                    "        DATE(date_create) BETWEEN :startDay AND :endDay AND\n" +
+                    "        TIME(date_create) BETWEEN :startHour AND :endHour\n" +
+                    "    )\n" +
+                    "    GROUP BY date\n" +
+                    ") AS combined ON d.Date = combined.date\n" +
+                    "GROUP BY d.Date")
     List<IRevenueDTO> revenue(@Param("startDay") String startDay, @Param("endDay") String endDay
             ,@Param("startHour") String startHour,@Param("endHour") String endHour);
+//    @Query(nativeQuery = true, value =
+//            "SELECT DATE(date_create) as date, SUM(total) as revenue\n" +
+//                    "FROM (\n" +
+//                    "    SELECT date_create, total\n" +
+//                    "    FROM invoice\n" +
+//                    "    WHERE (\n" +
+//                    "        DATE(date_create)  BETWEEN :startDay AND :endDay AND\n" +
+//                    "        TIME(date_create) BETWEEN :startHour AND :endHour\n" +
+//                    "    )\n" +
+//                    "    UNION ALL\n" +
+//                    "    SELECT date_create, total\n" +
+//                    "    FROM invoice_pres\n" +
+//                    "    WHERE (\n" +
+//                    "        DATE(date_create)  BETWEEN :startDay AND :endDay AND\n" +
+//                    "        TIME(date_create) BETWEEN :startHour AND :endHour\n" +
+//                    "    )\n" +
+//                    ") AS combined\n" +
+//                    "GROUP BY date\n" +
+//                    "ORDER BY date")
+//    List<IRevenueDTO> revenue(@Param("startDay") String startDay, @Param("endDay") String endDay
+//            ,@Param("startHour") String startHour,@Param("endHour") String endHour);
 
-    @Query(nativeQuery = true, value =
-            "SELECT date(date) as date,SUM(profit) AS 'revenue'\n" +
-                    "FROM\n" +
-                    "(SELECT invoice.date_create AS 'date',\n" +
-                    "        SUM(invoice_detail.quantity * invoice_detail.price) - SUM(invoice_detail.quantity * (medicine.import_price/medicine.conversion_rate)) AS 'profit'\n" +
-                    "    FROM invoice \n" +
-                    "    JOIN invoice_detail ON invoice.invoice_id = invoice_detail.invoice_id \n" +
-                    "    JOIN medicine ON invoice_detail.medicine_id = medicine.medicine_id\n" +
-                    "    WHERE (\n" +
-                    "        DATE(date_create)  BETWEEN :startDay AND :endDay AND\n" +
-                    "        TIME(date_create) BETWEEN :startHour AND :endHour\n" +
-                    "    )\n" +
-                    "    GROUP BY date\n" +
-                    "    UNION ALL\n" +
-                    "    SELECT invoice_pres.date_create AS 'date',\n" +
-                    "        SUM(invoice_detail.quantity * invoice_detail.price) - SUM(invoice_detail.quantity * (medicine.import_price/medicine.conversion_rate)) AS 'profit'\n" +
-                    "    FROM invoice_pres \n" +
-                    "    JOIN invoice_detail ON invoice_pres.invoice_pres_id = invoice_detail.invoice_pres_id \n" +
-                    "    JOIN medicine ON invoice_detail.medicine_id = medicine.medicine_id\n" +
-                    "    WHERE (\n" +
-                    "        DATE(date_create)  BETWEEN :startDay AND :endDay AND\n" +
-                    "        TIME(date_create) BETWEEN :startHour AND :endHour\n" +
-                    "    )\n" +
-                    "    GROUP BY date\n" +
-                    ") AS combined GROUP BY date\n")
-    List<IRevenueDTO> profit(@Param("startDay") String startDay, @Param("endDay") String endDay
-            ,@Param("startHour") String startHour,@Param("endHour") String endHour);
+        @Query(nativeQuery = true, value =
+                "WITH RECURSIVE DateRange AS (\n" +
+                        "    SELECT DATE(:startDay) AS Date\n" +
+                        "    UNION ALL\n" +
+                        "    SELECT Date + INTERVAL 1 DAY\n" +
+                        "    FROM DateRange\n" +
+                        "    WHERE Date + INTERVAL 1 DAY <= DATE(:endDay)\n" +
+                        ")\n" +
+                        "SELECT d.Date AS date, COALESCE(SUM(combined.profit), 0) AS revenue\n" +
+                        "FROM DateRange d\n" +
+                        "LEFT JOIN (\n" +
+                        "    SELECT DATE(invoice.date_create) AS date,\n" +
+                        "           SUM(invoice_detail.quantity * invoice_detail.price) - SUM(invoice_detail.quantity * (medicine.import_price/medicine.conversion_rate)) AS profit\n" +
+                        "    FROM invoice\n" +
+                        "    JOIN invoice_detail ON invoice.invoice_id = invoice_detail.invoice_id\n" +
+                        "    JOIN medicine ON invoice_detail.medicine_id = medicine.medicine_id\n" +
+                        "    WHERE (\n" +
+                        "        DATE(date_create)  BETWEEN :startDay AND :endDay AND\n" +
+                        "        TIME(date_create) BETWEEN :startHour AND :endHour\n" +
+                        "    )\n" +
+                        "    GROUP BY date\n" +
+                        "    UNION ALL\n" +
+                        "    SELECT DATE(invoice_pres.date_create) AS date,\n" +
+                        "           SUM(invoice_detail.quantity * invoice_detail.price) - SUM(invoice_detail.quantity * (medicine.import_price/medicine.conversion_rate)) AS profit\n" +
+                        "    FROM invoice_pres\n" +
+                        "    JOIN invoice_detail ON invoice_pres.invoice_pres_id = invoice_detail.invoice_pres_id\n" +
+                        "    JOIN medicine ON invoice_detail.medicine_id = medicine.medicine_id\n" +
+                        "    WHERE (\n" +
+                        "        DATE(date_create)  BETWEEN :startDay AND :endDay AND\n" +
+                        "        TIME(date_create) BETWEEN :startHour AND :endHour\n" +
+                        "    )\n" +
+                        "    GROUP BY date\n" +
+                        ") AS combined ON d.Date = combined.date\n" +
+                        "GROUP BY d.Date\n")
+        List<IRevenueDTO> profit(@Param("startDay") String startDay, @Param("endDay") String endDay
+                ,@Param("startHour") String startHour,@Param("endHour") String endHour);
+//        @Query(nativeQuery = true, value =
+//                "SELECT date(date) as date,SUM(profit) AS 'revenue'\n" +
+//                        "FROM\n" +
+//                        "(SELECT invoice.date_create AS 'date',\n" +
+//                        "        SUM(invoice_detail.quantity * invoice_detail.price) - SUM(invoice_detail.quantity * (medicine.import_price/medicine.conversion_rate)) AS 'profit'\n" +
+//                        "    FROM invoice \n" +
+//                        "    JOIN invoice_detail ON invoice.invoice_id = invoice_detail.invoice_id \n" +
+//                        "    JOIN medicine ON invoice_detail.medicine_id = medicine.medicine_id\n" +
+//                        "    WHERE (\n" +
+//                        "        DATE(date_create)  BETWEEN :startDay AND :endDay AND\n" +
+//                        "        TIME(date_create) BETWEEN :startHour AND :endHour\n" +
+//                        "    )\n" +
+//                        "    GROUP BY date\n" +
+//                        "    UNION ALL\n" +
+//                        "    SELECT invoice_pres.date_create AS 'date',\n" +
+//                        "        SUM(invoice_detail.quantity * invoice_detail.price) - SUM(invoice_detail.quantity * (medicine.import_price/medicine.conversion_rate)) AS 'profit'\n" +
+//                        "    FROM invoice_pres \n" +
+//                        "    JOIN invoice_detail ON invoice_pres.invoice_pres_id = invoice_detail.invoice_pres_id \n" +
+//                        "    JOIN medicine ON invoice_detail.medicine_id = medicine.medicine_id\n" +
+//                        "    WHERE (\n" +
+//                        "        DATE(date_create)  BETWEEN :startDay AND :endDay AND\n" +
+//                        "        TIME(date_create) BETWEEN :startHour AND :endHour\n" +
+//                        "    )\n" +
+//                        "    GROUP BY date\n" +
+//                        ") AS combined GROUP BY date\n")
+//        List<IRevenueDTO> profit(@Param("startDay") String startDay, @Param("endDay") String endDay
+//                ,@Param("startHour") String startHour,@Param("endHour") String endHour);
 
 
     @Query(nativeQuery = true, value =
             "SELECT e.employee_name as employeeName , \n" +
-                    "       i.date_create as dateCreate, \n" +
+                    "       DATE_FORMAT(i.date_create, '%Y-%m-%d') as dateCreate, \n" +
                     "       i.invoice_id as invoiceId, \n" +
                     "       i.total\n" +
                     "FROM invoice i\n" +
@@ -103,7 +173,7 @@ public interface IReportRepository extends JpaRepository<Medicine, String> {
                     "    )\n" +
                     "UNION ALL\n" +
                     "SELECT e.employee_name, \n" +
-                    "       ip.date_create, \n" +
+                    "       DATE_FORMAT(ip.date_create, '%Y-%m-%d'), \n" +
                     "       ip.invoice_pres_id, \n" +
                     "       ip.total\n" +
                     "FROM invoice_pres ip\n" +
@@ -117,33 +187,82 @@ public interface IReportRepository extends JpaRepository<Medicine, String> {
             , @Param("startHour") String startHour, @Param("endHour") String endHour);
 
     @Query(nativeQuery = true, value =
-            "SELECT supplier_id as supplierId, supplier_name as supplierName, address, email, phone_number as phoneNumber, to_pay_debt as toPayDebt\n" +
-                    "FROM supplier\n" +
-                    "WHERE to_pay_debt > 0 and delete_flag=0 "+
-                    "ORDER BY to_pay_debt DESC")
-    List<ISupplierDTO> getDebtSuppliers();
+            "SELECT s.supplier_id as supplierId, s.supplier_name as supplierName, s.address, s.email, s.phone_number as phoneNumber, \n" +
+                    "    SUM((SELECT SUM(wid.price * wid.quantity) FROM ware_in_detail wid WHERE wi.warehouse_in_id = wid.warehouse_in_id) - wi.pharmacy_pay) AS toPayDebt\n" +
+                    "FROM warehouse_in wi\n" +
+                    "JOIN supplier s ON wi.supplier_id = s.supplier_id\n" +
+                    "    WHERE (\n" +
+                    "        DATE(wi.create_date)  BETWEEN :startDay AND :endDay AND\n" +
+                    "        TIME(wi.create_date) BETWEEN :startHour AND :endHour\n" +
+                    "    )\n" +
+                    "GROUP BY s.supplier_id, s.supplier_name, s.address, s.email, s.phone_number")
+    List<ISupplierDTO> getDebtSuppliers(@Param("startDay") String startDay, @Param("endDay") String endDay
+            , @Param("startHour") String startHour, @Param("endHour") String endHour);
 
     @Query(nativeQuery = true, value =
-            "SELECT date(date) AS 'date',SUM(revenue) AS 'revenue',SUM(profit) AS 'profit'\n" +
-                    "   FROM(SELECT invoice.date_create AS 'date',\n" +
-                    "        SUM(invoice_detail.quantity * invoice_detail.price)  AS 'revenue',\n" +
-                    "        SUM(invoice_detail.quantity * invoice_detail.price) - SUM(invoice_detail.quantity * (medicine.import_price/medicine.conversion_rate)) AS 'profit'\n" +
-                    "    FROM invoice \n" +
-                    "    JOIN invoice_detail ON invoice.invoice_id = invoice_detail.invoice_id \n" +
+            "WITH RECURSIVE dates(date) AS (\n" +
+                    "  SELECT :startDate \n" +
+                    "  UNION ALL\n" +
+                    "  SELECT DATE_ADD(date, INTERVAL 1 DAY)\n" +
+                    "  FROM dates\n" +
+                    "  WHERE date < :endDate \n" +
+                    ")\n" +
+                    "SELECT dates.date AS 'date', COALESCE(SUM(revenue), 0) AS 'revenue', COALESCE(SUM(profit), 0) AS 'profit'\n" +
+                    "FROM dates\n" +
+                    "LEFT JOIN (\n" +
+                    "  SELECT date(date) AS 'date', SUM(revenue) AS 'revenue', SUM(profit) AS 'profit'\n" +
+                    "  FROM (\n" +
+                    "    SELECT invoice.date_create AS 'date',\n" +
+                    "      SUM(invoice_detail.quantity * invoice_detail.price) AS 'revenue',\n" +
+                    "      SUM(invoice_detail.quantity * invoice_detail.price) - SUM(invoice_detail.quantity * (medicine.import_price/medicine.conversion_rate)) AS 'profit'\n" +
+                    "    FROM invoice\n" +
+                    "    JOIN invoice_detail ON invoice.invoice_id = invoice_detail.invoice_id\n" +
                     "    JOIN medicine ON invoice_detail.medicine_id = medicine.medicine_id\n" +
                     "    GROUP BY invoice.date_create\n" +
                     "    UNION ALL\n" +
                     "    SELECT invoice_pres.date_create AS 'date',\n" +
-                    "        SUM(invoice_detail.quantity * invoice_detail.price)  AS 'revenue',\n" +
-                    "        SUM(invoice_detail.quantity * invoice_detail.price) - SUM(invoice_detail.quantity * (medicine.import_price/medicine.conversion_rate)) AS 'profit'\n" +
-                    "    FROM invoice_pres \n" +
-                    "    JOIN invoice_detail ON invoice_pres.invoice_pres_id = invoice_detail.invoice_pres_id \n" +
+                    "      SUM(invoice_detail.quantity * invoice_detail.price) AS 'revenue',\n" +
+                    "      SUM(invoice_detail.quantity * invoice_detail.price) - SUM(invoice_detail.quantity * (medicine.import_price/medicine.conversion_rate)) AS 'profit'\n" +
+                    "    FROM invoice_pres\n" +
+                    "    JOIN invoice_detail ON invoice_pres.invoice_pres_id = invoice_detail.invoice_pres_id\n" +
                     "    JOIN medicine ON invoice_detail.medicine_id = medicine.medicine_id\n" +
                     "    GROUP BY invoice_pres.date_create\n" +
-                    ") AS combined\n" +
-                    "GROUP BY date")
-    List<IRevenueProfitDTO> getRevenueAndProfit(@Param("chartType") String chartType, @Param("startDate") String startDate
+                    "  ) AS combined\n" +
+                    "  GROUP BY date\n" +
+                    ") AS revenue_profit ON dates.date = revenue_profit.date\n" +
+                    "GROUP BY dates.date")
+    List<IRevenueProfitDTO> getRevenueAndProfit(@Param("startDate") String startDate
             , @Param("endDate") String endDate);
+
+
+    @Query(nativeQuery = true, value =
+            "WITH RECURSIVE months_in_year AS (\n" +
+                    "    SELECT :startDate AS month_date\n" +
+                    "    UNION\n" +
+                    "    SELECT DATE_ADD(month_date, INTERVAL 1 MONTH)\n" +
+                    "    FROM months_in_year\n" +
+                    "    WHERE month_date < :endDate \n" +
+                    ")\n" +
+                    "SELECT \n" +
+                    "    CONCAT('Tháng ', LPAD(MONTH(m.month_date), 2, '0')) AS 'date'," +
+                    "    COALESCE(SUM(c.revenue), 0) AS 'revenue',\n" +
+                    "    COALESCE(SUM(c.profit), 0) AS 'profit'\n" +
+                    "FROM months_in_year m\n" +
+                    "LEFT JOIN (\n" +
+                    "    SELECT \n" +
+                    "        DATE_FORMAT(invoice.date_create, '%Y-%m') AS 'date',\n" +
+                    "        SUM(invoice_detail.quantity * invoice_detail.price) AS 'revenue',\n" +
+                    "        SUM(invoice_detail.quantity * invoice_detail.price) - SUM(invoice_detail.quantity * (medicine.import_price/medicine.conversion_rate)) AS 'profit'\n" +
+                    "    FROM invoice \n" +
+                    "    JOIN invoice_detail ON invoice.invoice_id = invoice_detail.invoice_id \n" +
+                    "    JOIN medicine ON invoice_detail.medicine_id = medicine.medicine_id\n" +
+                    "    WHERE YEAR(invoice.date_create) = year(:startDate)\n" +
+                    "    GROUP BY DATE_FORMAT(invoice.date_create, '%Y-%m')\n" +
+                    ") AS c ON DATE_FORMAT(m.month_date, '%Y-%m') = c.date\n" +
+                    "GROUP BY m.month_date")
+    List<IRevenueProfitDTO> getRevenueAndProfitByYear( @Param("startDate") String startDate
+            , @Param("endDate") String endDate);
+
 
 
 }

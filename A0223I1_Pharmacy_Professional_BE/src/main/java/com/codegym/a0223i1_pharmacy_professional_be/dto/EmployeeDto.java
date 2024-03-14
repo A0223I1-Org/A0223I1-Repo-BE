@@ -1,33 +1,23 @@
 package com.codegym.a0223i1_pharmacy_professional_be.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
 import java.util.Date;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-public class EmployeeDto {
-    private String employeeId;
+public interface EmployeeDto {
+     String getEmployee_id();
+     String getEmployee_name();
 
-    private String employeeName;
+     String getPhone_number();
 
-    private String phoneNumber;
+     Date getDate_start();
 
-    private Date dateStart;
+     String getAddress();
 
-    private String address;
+     String getNote();
 
-    private String note;
-
-    private int salary;
-
-    private String image;
-    private String email;
-    private String password;
-    private Long role_id;
+     int getSalary();
+     String getImage();
+     Integer getAccount_id();
+     String getEmail();
+     String getPassword();
+     Long getRole_id();
 }

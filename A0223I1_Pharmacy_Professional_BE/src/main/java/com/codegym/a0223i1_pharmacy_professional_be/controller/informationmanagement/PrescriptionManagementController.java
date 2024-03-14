@@ -55,53 +55,65 @@ public class PrescriptionManagementController {
 
 
     @PostMapping
-    public ResponseEntity<PrescriptionDetail> createPrescription(@RequestBody PrescriptionDetailDTO detailPrescriptionDTO) {
+    public ResponseEntity<?> createPrescription(@RequestBody PrescriptionDetailDTO detailPrescriptionDTO) {
 
-        List<PrescriptionDetailDTO> detailPrescriptions = detailPrescriptionDTO.getDetailPrescription();
-        List<PrescriptionDetailDTO> saveList = new ArrayList<>();
+        Prescription existingPrescription = prescriptionService.findPrescriptionByName(detailPrescriptionDTO.getPrescription().getPrescriptionName());
 
-        PrescriptionDetail detailPrescription = new PrescriptionDetail();
+        if (existingPrescription != null && existingPrescription.getPrescriptionName().equals(detailPrescriptionDTO.getPrescription().getPrescriptionName())) {
+            return ResponseEntity.ok().body("Prescription with the same name already exists");
 
+        } else {
+            try {
 
-        saveList.addAll(detailPrescriptions);
+                List<PrescriptionDetailDTO> detailPrescriptions = detailPrescriptionDTO.getDetailPrescription();
+                List<PrescriptionDetailDTO> saveList = new ArrayList<>();
 
-        detailPrescription.setMedicineList(saveList.get(0).getMedicineId() + "," + saveList.get(1).getMedicineId2()  + "," + saveList.get(2).getMedicineId3()
-                + "," + saveList.get(3).getMedicineId4() + "," + saveList.get(4).getMedicineId5() + "," + saveList.get(5).getMedicineId6()
-                + "," + saveList.get(6).getMedicineId7());
-
-
-        detailPrescription.setTimes(saveList.get(0).getTimes() + "," + saveList.get(1).getTimes2() + "," + saveList.get(2).getTimes3() + "," + saveList.get(3).getTimes4()
-                + "," + saveList.get(4).getTimes5() + "," + saveList.get(5).getTimes6() + "," + saveList.get(6).getTimes7());
-
-        detailPrescription.setQuantity(saveList.get(0).getQuantity() + "," + saveList.get(1).getQuantity2() + "," + saveList.get(2).getQuantity3() + "," + saveList.get(3).getQuantity4()
-                + "," + saveList.get(4).getQuantity5() + "," + saveList.get(5).getQuantity6() + "," + saveList.get(6).getQuantity7());
-
-        detailPrescription.setQuantityPerTimes(saveList.get(0).getQuantityPerTimes() + "," + saveList.get(1).getQuantityPerTimes2() + "," + saveList.get(2).getQuantityPerTimes3()
-                + "," + saveList.get(3).getQuantityPerTimes4() + "," + saveList.get(4).getQuantityPerTimes5() + "," + saveList.get(5).getQuantityPerTimes6()
-                + "," + saveList.get(6).getQuantityPerTimes7());
+                PrescriptionDetail detailPrescription = new PrescriptionDetail();
 
 
-        detailPrescriptionDTO.setDeleteFlag(true);
+                saveList.addAll(detailPrescriptions);
 
-        Symptom symptom = new Symptom();
-        symptom.setSymptomName(detailPrescriptionDTO.getPrescription().getSymptom().getSymptomName());
+                detailPrescription.setMedicineList(saveList.get(0).getMedicineId() + "," + saveList.get(1).getMedicineId2() + "," + saveList.get(2).getMedicineId3()
+                        + "," + saveList.get(3).getMedicineId4() + "," + saveList.get(4).getMedicineId5() + "," + saveList.get(5).getMedicineId6()
+                        + "," + saveList.get(6).getMedicineId7());
 
 
-        Prescription prescription = new Prescription();
-        prescription.setPrescriptionName(detailPrescriptionDTO.getPrescription().getPrescriptionName());
-        prescription.setTarget(detailPrescriptionDTO.getPrescription().getTarget());
-        prescription.setTreatmentPeriod(detailPrescriptionDTO.getPrescription().getTreatmentPeriod());
-        prescription.setNote(detailPrescriptionDTO.getPrescription().getNote());
-        prescription.setDeleteFlag(detailPrescriptionDTO.getDeleteFlag());
-        prescription.setPrescriptionId(prescriptionService.generateNextCode());
-//        prescription.setDetailPrescriptions(detailPrescriptionDTO.getPrescription().getDetailPrescriptions());
-        prescription.setSymptom(symptom);
+                detailPrescription.setTimes(saveList.get(0).getTimes() + "," + saveList.get(1).getTimes2() + "," + saveList.get(2).getTimes3() + "," + saveList.get(3).getTimes4()
+                        + "," + saveList.get(4).getTimes5() + "," + saveList.get(5).getTimes6() + "," + saveList.get(6).getTimes7());
 
-        detailPrescription.setPrescription(prescription);
+                detailPrescription.setQuantity(saveList.get(0).getQuantity() + "," + saveList.get(1).getQuantity2() + "," + saveList.get(2).getQuantity3() + "," + saveList.get(3).getQuantity4()
+                        + "," + saveList.get(4).getQuantity5() + "," + saveList.get(5).getQuantity6() + "," + saveList.get(6).getQuantity7());
 
-        PrescriptionDetail save = detailPrescriptionService.save(detailPrescription);
+                detailPrescription.setQuantityPerTimes(saveList.get(0).getQuantityPerTimes() + "," + saveList.get(1).getQuantityPerTimes2() + "," + saveList.get(2).getQuantityPerTimes3()
+                        + "," + saveList.get(3).getQuantityPerTimes4() + "," + saveList.get(4).getQuantityPerTimes5() + "," + saveList.get(5).getQuantityPerTimes6()
+                        + "," + saveList.get(6).getQuantityPerTimes7());
 
-        return new ResponseEntity<>(save, HttpStatus.CREATED);
+
+                detailPrescriptionDTO.setDeleteFlag(true);
+
+                Symptom symptom = new Symptom();
+                symptom.setSymptomName(detailPrescriptionDTO.getPrescription().getSymptom().getSymptomName());
+
+
+                Prescription prescription = new Prescription();
+                prescription.setPrescriptionName(detailPrescriptionDTO.getPrescription().getPrescriptionName());
+                prescription.setTarget(detailPrescriptionDTO.getPrescription().getTarget());
+                prescription.setTreatmentPeriod(detailPrescriptionDTO.getPrescription().getTreatmentPeriod());
+                prescription.setNote(detailPrescriptionDTO.getPrescription().getNote());
+                prescription.setDeleteFlag(detailPrescriptionDTO.getDeleteFlag());
+                prescription.setPrescriptionId(prescriptionService.generateNextCode());
+                prescription.setSymptom(symptom);
+
+                detailPrescription.setPrescription(prescription);
+
+                PrescriptionDetail save = detailPrescriptionService.save(detailPrescription);
+
+                return new ResponseEntity<>(save, HttpStatus.CREATED);
+            } catch (Exception e){
+                e.printStackTrace();
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            }
+        }
     }
 
     @PutMapping("/{id}")
@@ -115,7 +127,6 @@ public class PrescriptionManagementController {
 
 
         PrescriptionDetail existingDetailPrescription = detailPrescriptionService.findById(id);
-        Medicine existingMedicine = medicineService.findById2(detailPrescriptionDTO.getMedicineId());
         Prescription existingPrescription = prescriptionService.findPrescriptionById(detailPrescriptionDTO.getPrescription().getPrescriptionId());
         Symptom existingSymptom = symptomService.findSymptomByPrescriptionId(detailPrescriptionDTO.getPrescription().getPrescriptionId());
 
@@ -130,9 +141,16 @@ public class PrescriptionManagementController {
             existingDetailPrescription.setMedicineList(saveList.get(0).getMedicineId() + "," + saveList.get(1).getMedicineId2()  + "," + saveList.get(2).getMedicineId3()
                     + "," + saveList.get(3).getMedicineId4() + "," + saveList.get(4).getMedicineId5() + "," + saveList.get(5).getMedicineId6()
                     + "," + saveList.get(6).getMedicineId7());
-            existingDetailPrescription.setTimes(saveList.get(0).getTimes() + "," + saveList.get(1).getTimes2());
-            existingDetailPrescription.setQuantity(saveList.get(0).getQuantity() + "," + saveList.get(1).getQuantity2());
-            existingDetailPrescription.setQuantityPerTimes(saveList.get(0).getQuantityPerTimes() + "," + saveList.get(1).getQuantityPerTimes2());
+            existingDetailPrescription.setTimes(saveList.get(0).getTimes() + "," + saveList.get(1).getTimes2() + "," + saveList.get(2).getTimes3() + "," + saveList.get(3).getTimes4()
+                    + "," + saveList.get(4).getTimes5() + "," + saveList.get(5).getTimes6() + "," + saveList.get(6).getTimes7());
+
+            existingDetailPrescription.setQuantity(saveList.get(0).getQuantity() + "," + saveList.get(1).getQuantity2() + "," + saveList.get(2).getQuantity3() + "," + saveList.get(3).getQuantity4()
+                    + "," + saveList.get(4).getQuantity5() + "," + saveList.get(5).getQuantity6() + "," + saveList.get(6).getQuantity7()
+            );
+
+            existingDetailPrescription.setQuantityPerTimes(saveList.get(0).getQuantityPerTimes() + "," + saveList.get(1).getQuantityPerTimes2() + "," + saveList.get(2).getQuantityPerTimes3()
+                    + "," + saveList.get(3).getQuantityPerTimes4() + "," + saveList.get(4).getQuantityPerTimes5() + "," + saveList.get(5).getQuantityPerTimes6() + "," + saveList.get(6).getQuantityPerTimes7()
+            );
 
             existingPrescription.setPrescriptionName(detailPrescriptionDTO.getPrescription().getPrescriptionName());
             existingPrescription.setNote(detailPrescriptionDTO.getPrescription().getNote());

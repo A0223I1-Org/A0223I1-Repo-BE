@@ -26,4 +26,9 @@ public interface PrescriptionRepository extends JpaRepository<Prescription, Stri
             "WHERE dp.id = :id", nativeQuery = true)
     Prescription findPrescriptionByDetailId(@Param("id") Long id);
 
+    @Query(value = "SELECT p.id, p.name, p.target, p.note, p.treatment_period, p.delete_flag, p.symptom_id " +
+            "FROM prescription p " +
+            "WHERE p.name = :name AND p.delete_flag = 1 ", nativeQuery = true)
+    Prescription findPrescriptionByName(@Param("name") String name);
+
 }
