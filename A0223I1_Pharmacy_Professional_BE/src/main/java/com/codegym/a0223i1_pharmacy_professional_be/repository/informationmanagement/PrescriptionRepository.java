@@ -31,6 +31,4 @@ public interface PrescriptionRepository extends JpaRepository<Prescription, Stri
             "WHERE p.name = :name AND p.delete_flag = 1 ", nativeQuery = true)
     Prescription findPrescriptionByName(@Param("name") String name);
 
-
-
 }

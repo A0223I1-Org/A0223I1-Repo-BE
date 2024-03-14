@@ -77,7 +77,6 @@ public class PrescriptionServiceImpl implements PrescriptionService {
     public  String generateNextCode() {
         List<Prescription> prescriptions = prescriptionRepository.findAll();
 
-
         int maxCode = 0;
         for (Prescription p : prescriptions) {
             if (p.getPrescriptionId() != null) {

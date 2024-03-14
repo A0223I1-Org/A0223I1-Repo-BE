@@ -35,10 +35,13 @@ public class Invoice {
     private Prescription prescription;
 
     @ManyToOne
+    @JsonBackReference
+
     @JoinColumn(name = "employee_id", referencedColumnName = "employee_id")
     private Employee employee;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "customer_id", referencedColumnName = "customer_id")
     private Customer customer;
 

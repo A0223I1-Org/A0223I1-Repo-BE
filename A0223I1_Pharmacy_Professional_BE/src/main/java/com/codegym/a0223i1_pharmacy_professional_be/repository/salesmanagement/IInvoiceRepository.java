@@ -1,18 +1,18 @@
 package com.codegym.a0223i1_pharmacy_professional_be.repository.salesmanagement;
 
 import com.codegym.a0223i1_pharmacy_professional_be.dto.InvoiceListViewDTO;
-import com.codegym.a0223i1_pharmacy_professional_be.entity.Invoice;
-import com.codegym.a0223i1_pharmacy_professional_be.entity.Prescription;
-import com.codegym.a0223i1_pharmacy_professional_be.entity.Symptom;
+import com.codegym.a0223i1_pharmacy_professional_be.entity.*;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.time.*;
+import java.util.List;
 
-
+@Repository
 public interface IInvoiceRepository extends JpaRepository<Invoice, String> {
-    @Query(value = "SELECT i.invoice_id, i.customer_id, i.employee_id, DATE(i.date_create) AS create_date, i.status, i.total, i.note, c.customer_name, e.employee_name, i.invoice_type " +
+    @Query(value = "SELECT i.invoice_id, i.customer_id, i.employee_id, DATE(i.date_create) AS create_date, TIME(i.date_create) AS create_time,i.status, i.total, i.note, c.customer_name, e.employee_name, i.invoice_type " +
             "FROM invoice i " +
             "JOIN customer c ON i.customer_id = c.customer_id " +
             "JOIN employee e ON i.employee_id = e.employee_id", nativeQuery = true)
@@ -39,5 +39,16 @@ public interface IInvoiceRepository extends JpaRepository<Invoice, String> {
 
     @Query("SELECT p FROM Prescription p")
     Page<Prescription> findAllPrescription(Pageable pageable);
+
+    @Query("SELECT c FROM Customer c")
+    Page<Customer> findAllCustomer(Pageable pageable);
+
+    @Query("SELECT e FROM Employee e")
+    Page<Employee> findAllEmployee(Pageable pageable);
+
+    @Query("SELECT m FROM Medicine m")
+    Page<Medicine> findAllMedicine(Pageable pageable);
+
+
 }
 
