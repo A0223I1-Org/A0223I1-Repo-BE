@@ -1,8 +1,7 @@
 package com.codegym.a0223i1_pharmacy_professional_be.controller.salesmanagement;
 
 import com.codegym.a0223i1_pharmacy_professional_be.dto.InvoiceListViewDTO;
-import com.codegym.a0223i1_pharmacy_professional_be.entity.Prescription;
-import com.codegym.a0223i1_pharmacy_professional_be.entity.Symptom;
+import com.codegym.a0223i1_pharmacy_professional_be.entity.*;
 import com.codegym.a0223i1_pharmacy_professional_be.service.interfaceservice.salesmanagement.IInvoiceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
@@ -106,6 +105,7 @@ public class RetailSalesManagementController {
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
+
     @GetMapping("/displayPrescription")
     public ResponseEntity<?> findAllPrescription(@PageableDefault(page = 0, size = 10, sort = "prescriptionId", direction = Sort.Direction.ASC) Pageable pageable) {
         Page<Prescription> result = invoiceService.findAllPrescription(pageable);
@@ -122,4 +122,51 @@ public class RetailSalesManagementController {
         }
     }
 
+    @GetMapping("/displayCustomer")
+    public ResponseEntity<?> findAllCustomer(@PageableDefault(page = 0, size = 10, sort = "customerId", direction = Sort.Direction.ASC) Pageable pageable) {
+        Page<Customer> result = invoiceService.findAllCustomer(pageable);
+        if (result != null && !result.isEmpty()) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("data", result.getContent());
+            response.put("message", "Tìm danh sách khách hàng thành công!");
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } else {
+            Map<String, Object> response = new HashMap<>();
+            response.put("data", Collections.emptyList());
+            response.put("message", "Danh sách khách hàng trống!");
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+    }
+
+    @GetMapping("/displayEmployee")
+    public ResponseEntity<?> findAllEmployee(@PageableDefault(page = 0, size = 10, sort = "employeeId", direction = Sort.Direction.ASC) Pageable pageable) {
+        Page<Employee> result = invoiceService.findAllEmployee(pageable);
+        if (result != null && !result.isEmpty()) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("data", result.getContent());
+            response.put("message", "Tìm danh sách nhân viên thành công!");
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } else {
+            Map<String, Object> response = new HashMap<>();
+            response.put("data", Collections.emptyList());
+            response.put("message", "Danh sách nhân viên trống!");
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+    }
+
+    @GetMapping("/displayMedicine")
+    public ResponseEntity<?> findAllMedicine(@PageableDefault(page = 0, size = 10, sort = "medicineId", direction = Sort.Direction.ASC) Pageable pageable) {
+        Page<Medicine> result = invoiceService.findAllMedicine(pageable);
+        if (result != null && !result.isEmpty()) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("data", result.getContent());
+            response.put("message", "Tìm danh sách thuốc thành công!");
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } else {
+            Map<String, Object> response = new HashMap<>();
+            response.put("data", Collections.emptyList());
+            response.put("message", "Danh sách thuốc trống!");
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+    }
 }

@@ -38,6 +38,7 @@ public class Employee {
     private Account account;
 
     @OneToMany(mappedBy = "employee")
+    @JsonBackReference
     List<Invoice> invoices;
 
     @OneToMany(mappedBy = "employee")
