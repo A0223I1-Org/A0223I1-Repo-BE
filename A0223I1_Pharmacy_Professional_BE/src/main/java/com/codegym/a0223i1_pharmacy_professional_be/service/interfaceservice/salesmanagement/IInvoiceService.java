@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 public interface IInvoiceService {
     Page<InvoiceListViewDTO> findAllInvoice(Pageable pageable);
@@ -19,5 +20,7 @@ public interface IInvoiceService {
     Page<Employee> findAllEmployee(Pageable pageable);
     Page<Medicine> findAllMedicine(Pageable pageable);
 
+    void saveInvoice(Invoice invoice);
+    void saveInvoiceDetails(List<InvoiceDetail> invoiceDetails);
     String generateNextInvoiceId();
 }

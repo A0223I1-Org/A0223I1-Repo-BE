@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.extern.apachecommons.CommonsLog;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -51,4 +52,12 @@ public class Invoice {
 
     @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL)
     List<InvoiceDetail> invoiceDetails;
+
+    public void addInvoiceDetail(InvoiceDetail invoiceDetail) {
+        if (invoiceDetails == null) {
+            invoiceDetails = new ArrayList<>();
+        }
+        invoiceDetail.setInvoice(this); // Đảm bảo rằng invoice trong InvoiceDetail được thiết lập đúng
+        invoiceDetails.add(invoiceDetail);
+    }
 }

@@ -2,8 +2,10 @@ package com.codegym.a0223i1_pharmacy_professional_be.service.implement.salesmana
 
 import com.codegym.a0223i1_pharmacy_professional_be.dto.InvoiceListViewDTO;
 import com.codegym.a0223i1_pharmacy_professional_be.entity.*;
+import com.codegym.a0223i1_pharmacy_professional_be.repository.salesmanagement.IInvoiceDetailRepository;
 import com.codegym.a0223i1_pharmacy_professional_be.repository.salesmanagement.IInvoiceRepository;
 import com.codegym.a0223i1_pharmacy_professional_be.service.interfaceservice.salesmanagement.IInvoiceService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +22,8 @@ public class InvoiceService implements IInvoiceService {
     @Autowired
     private IInvoiceRepository iInvoiceRepository;
 
+    @Autowired
+    private IInvoiceDetailRepository iInvoiceDetailRepository;
     @Override
     public Page<InvoiceListViewDTO> findAllInvoice(Pageable pageable) {
         return iInvoiceRepository.findAllInvoice(pageable);
@@ -59,6 +63,16 @@ public class InvoiceService implements IInvoiceService {
     @Override
     public Page<Medicine> findAllMedicine(Pageable pageable) {
         return iInvoiceRepository.findAllMedicine(pageable);
+    }
+
+    @Transactional
+    public void saveInvoice(Invoice invoice) {
+            iInvoiceRepository.save(invoice);
+    }
+
+    @Transactional
+    public void saveInvoiceDetails(List<InvoiceDetail> invoiceDetails) {
+        iInvoiceDetailRepository.saveAll(invoiceDetails);
     }
 
     @Override
