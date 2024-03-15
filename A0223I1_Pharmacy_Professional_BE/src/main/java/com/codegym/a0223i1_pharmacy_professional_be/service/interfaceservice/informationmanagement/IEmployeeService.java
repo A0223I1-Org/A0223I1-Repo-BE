@@ -17,4 +17,6 @@ public interface IEmployeeService {
     void updateRoleId(int account_id,Long role_id);
     EmployeeDto findById(String employeeId);
     void delete(String employeeId);
+
+    Employee findByEmployeeId(String employeeId);
 }
