@@ -67,12 +67,15 @@ public class PrescriptionServiceImpl implements PrescriptionService {
         return prescriptionRepository.findPrescriptionByDetailId(id);
     }
 
+    @Override
+    public Prescription findPrescriptionByName(String name) {
+        return prescriptionRepository.findPrescriptionByName(name);
+    }
 
 
     @Override
     public  String generateNextCode() {
         List<Prescription> prescriptions = prescriptionRepository.findAll();
-
 
         int maxCode = 0;
         for (Prescription p : prescriptions) {
