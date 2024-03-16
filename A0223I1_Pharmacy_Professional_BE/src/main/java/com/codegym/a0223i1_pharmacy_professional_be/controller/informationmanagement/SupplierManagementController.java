@@ -25,51 +25,41 @@ public class SupplierManagementController {
     private SupplierValidate supplierValidate;
 
     @GetMapping("/listSupplier")
-    public ResponseEntity<Page<Supplier>> getAllSuppliers(@RequestParam(required = false) String orderBy,
-                                                          @RequestParam(required = false) String searchType,
-                                                          @RequestParam(required = false) String searchValue,
-                                                          Pageable pageable) {
+    public ResponseEntity<Page<Supplier>> getAllSuppliers(
+            @RequestParam(required = false) String orderBy,
+            @RequestParam(required = false) String searchType,
+            @RequestParam(required = false) String searchValue,
+            Pageable pageable) {
+
         Page<Supplier> suppliers;
 
         if (searchType != null && !searchType.isEmpty() && searchValue != null && !searchValue.isEmpty()) {
             switch (searchType) {
                 case "supplierId":
-                    suppliers = supplierService.findAllBySupplierId(searchValue, pageable);
+                    suppliers = supplierService.findAllSuppliers(searchValue, null, null, null, orderBy, pageable);
                     break;
                 case "supplierName":
-                    suppliers = supplierService.findAllBySupplierName(searchValue, pageable);
+                    suppliers = supplierService.findAllSuppliers(null, searchValue, null, null, orderBy, pageable);
                     break;
                 case "address":
-                    suppliers = supplierService.findAllByAddress(searchValue, pageable);
+                    suppliers = supplierService.findAllSuppliers(null, null, searchValue, null, orderBy, pageable);
                     break;
                 case "phoneNumber":
-                    suppliers = supplierService.findAllByPhoneNumber(searchValue, pageable);
+                    suppliers = supplierService.findAllSuppliers(null, null, null, searchValue, orderBy, pageable);
                     break;
                 default:
-                    suppliers = supplierService.findAllOrderBySupplierId(pageable);
+                    suppliers = supplierService.findAllSuppliers(null, null, null, null, orderBy, pageable);
                     break;
             }
         } else if (orderBy != null && !orderBy.isEmpty()) {
-            switch (orderBy) {
-                case "supplierName":
-                    suppliers = supplierService.findAllOrderBySupplierName(pageable);
-                    break;
-                case "address":
-                    suppliers = supplierService.findAllOrderByAddress(pageable);
-                    break;
-                case "phoneNumber":
-                    suppliers = supplierService.findAllOrderByPhoneNumber(pageable);
-                    break;
-                default:
-                    suppliers = supplierService.findAllOrderBySupplierId(pageable);
-                    break;
-            }
+            suppliers = supplierService.findAllSuppliers(null, null, null, null, orderBy, pageable);
         } else {
-            suppliers = supplierService.findAllOrderBySupplierId(pageable);
+            suppliers = supplierService.findAllSuppliers(null, null, null, null, null, pageable);
         }
 
         return new ResponseEntity<>(suppliers, HttpStatus.OK);
     }
+
 
 
     @PostMapping("/addSupplier")

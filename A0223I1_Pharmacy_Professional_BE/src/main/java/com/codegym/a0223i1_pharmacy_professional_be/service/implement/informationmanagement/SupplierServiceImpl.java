@@ -17,48 +17,33 @@ public class SupplierServiceImpl implements ISupplierService {
 
 
     @Override
-    public Page<Supplier> findAllOrderBySupplierId(Pageable pageable) {
-        return supplierRepository.findAllOrderBySupplierId(pageable);
+    public Page<Supplier> findAllBySupplierId(String id, String supplierName, String address, String phoneNumber, Pageable pageable) {
+        return supplierRepository.findAllBySupplierId(id, supplierName, address, phoneNumber, pageable);
     }
 
     @Override
-    public Page<Supplier> findAllOrderBySupplierName(Pageable pageable) {
-        return supplierRepository.findAllOrderBySupplierName(pageable);
+    public Page<Supplier> findAllBySupplierName(String id, String supplierName, String address, String phoneNumber, Pageable pageable) {
+        return supplierRepository.findAllBySupplierName(id, supplierName, address, phoneNumber, pageable);
     }
 
     @Override
-    public Page<Supplier> findAllOrderByAddress(Pageable pageable) {
-        return supplierRepository.findAllOrderByAddress(pageable);
+    public Page<Supplier> findAllByAddress(String id, String supplierName, String address, String phoneNumber, Pageable pageable) {
+        return supplierRepository.findAllByAddress(id, supplierName, address, phoneNumber, pageable);
     }
 
     @Override
-    public Page<Supplier> findAllOrderByPhoneNumber(Pageable pageable) {
-        return supplierRepository.findAllOrderByPhoneNumber(pageable);
-    }
-
-    @Override
-    public Page<Supplier> findAllBySupplierId(String id, Pageable pageable) {
-        return supplierRepository.findAllBySupplierId(id, pageable);
-    }
-
-    @Override
-    public Page<Supplier> findAllBySupplierName(String supplierName, Pageable pageable) {
-        return supplierRepository.findAllBySupplierName(supplierName, pageable);
-    }
-
-    @Override
-    public Page<Supplier> findAllByAddress(String address, Pageable pageable) {
-        return supplierRepository.findAllByAddress(address, pageable);
-    }
-
-    @Override
-    public Page<Supplier> findAllByPhoneNumber(String phoneNumber, Pageable pageable) {
-        return supplierRepository.findAllByPhoneNumber(phoneNumber, pageable);
+    public Page<Supplier> findAllByPhoneNumber(String id, String supplierName, String address, String phoneNumber, Pageable pageable) {
+        return supplierRepository.findAllByPhoneNumber(id, supplierName, address, phoneNumber, pageable);
     }
 
     @Override
     public Supplier findSupplierById(String id) {
         return supplierRepository.findSupplierById(id);
+    }
+
+    @Override
+    public Page<Supplier> findAllSuppliers(String supplierId, String supplierName, String address, String phoneNumber, String orderBy, Pageable pageable) {
+        return supplierRepository.findAllWithSortingAndFiltering(supplierId, supplierName, address, phoneNumber, orderBy, pageable);
     }
 
     @Override

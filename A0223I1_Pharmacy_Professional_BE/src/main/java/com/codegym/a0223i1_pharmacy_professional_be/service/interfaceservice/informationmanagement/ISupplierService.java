@@ -6,23 +6,17 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface ISupplierService {
-    Page<Supplier> findAllOrderBySupplierId(Pageable pageable);
+    Page<Supplier> findAllBySupplierId(String id, String supplierName, String address, String phoneNumber, Pageable pageable);
 
-    Page<Supplier> findAllOrderBySupplierName(Pageable pageable);
+    Page<Supplier> findAllBySupplierName(String id, String supplierName, String address, String phoneNumber, Pageable pageable);
 
-    Page<Supplier> findAllOrderByAddress(Pageable pageable);
+    Page<Supplier> findAllByAddress(String id, String supplierName, String address, String phoneNumber, Pageable pageable);
 
-    Page<Supplier> findAllOrderByPhoneNumber(Pageable pageable);
-
-    Page<Supplier> findAllBySupplierId(String id, Pageable pageable);
-
-    Page<Supplier> findAllBySupplierName(String supplierName, Pageable pageable);
-
-    Page<Supplier> findAllByAddress(String address, Pageable pageable);
-
-    Page<Supplier> findAllByPhoneNumber(String phoneNumber, Pageable pageable);
+    Page<Supplier> findAllByPhoneNumber(String id, String supplierName, String address, String phoneNumber, Pageable pageable);
 
     Supplier findSupplierById(String id);
+
+    Page<Supplier> findAllSuppliers(String supplierId, String supplierName, String address, String phoneNumber, String orderBy, Pageable pageable);
 
     void deleteById(String id);
 

@@ -49,8 +49,8 @@ public class SupplierValidate {
         }
 
 
-        if (supplierDTO.getAddress().length() > 50) {
-            errors.put("errorAddressLength","Địa chỉ không được quá 50 ký tự");
+        if (supplierDTO.getAddress().length() > 255) {
+            errors.put("errorAddressLength","Địa chỉ không được quá 255 ký tự");
         }
 
 
@@ -61,8 +61,8 @@ public class SupplierValidate {
             errors.put("errorEmailFormat","Email không hợp lệ");
         }
 
-        if (supplierDTO.getNote().length() > 25) {
-            errors.put("errorNoteLength","Ghi chú không được quá 25 ký tự");
+        if (supplierDTO.getNote().length() > 255) {
+            errors.put("errorNoteLength","Ghi chú không được quá 255 ký tự");
         }
         return errors;
     }
