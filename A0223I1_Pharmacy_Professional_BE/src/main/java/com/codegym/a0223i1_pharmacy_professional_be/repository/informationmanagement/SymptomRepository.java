@@ -6,10 +6,11 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface SymptomRepository extends JpaRepository<Symptom, Integer> {
-    @Query(value = "SELECT s.*, p.name AS pname " +
+    @Query(value = "SELECT s.*, p.prescription_name AS pname " +
             "FROM symptom s " +
-            "JOIN prescription p ON s.id = p.symptom_id " +
-            "WHERE p.id = :id", nativeQuery = true)
+            "JOIN prescription p ON s.symptom_id = p.symptom_id " +
+            "WHERE p.prescription_id = :id", nativeQuery = true)
     Symptom findSymptomByPrescriptionId(@Param("id") String id);
+
 
 }
