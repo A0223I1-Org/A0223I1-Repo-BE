@@ -16,7 +16,7 @@ public interface IInvoiceRepository extends JpaRepository<Invoice, String> {
             "FROM invoice i " +
             "JOIN customer c ON i.customer_id = c.customer_id " +
             "JOIN employee e ON i.employee_id = e.employee_id", nativeQuery = true)
-    Page<InvoiceListViewDTO> findAllInvoice(Pageable pageable);
+    List<InvoiceListViewDTO> findAllInvoice();
 
     @Query(value = "SELECT i.invoice_id, i.customer_id, i.employee_id, DATE(i.date_create) AS create_date, TIME(i.date_create) AS create_time, i.status, i.total, i.note, c.customer_name, e.employee_name, i.invoice_type " +
             "FROM invoice i " +
@@ -25,7 +25,7 @@ public interface IInvoiceRepository extends JpaRepository<Invoice, String> {
             "WHERE DATE(i.date_create) BETWEEN :fromDate AND :toDate " +
             "AND TIME(i.date_create) BETWEEN :fromTime AND :toTime " +
             "AND i.invoice_type = :displayField", nativeQuery = true)
-    Page<InvoiceListViewDTO> findInvoiceByDateAndTimeRangeAndDisplayField(@Param("fromDate") LocalDate fromDate, @Param("toDate") LocalDate toDate, @Param("fromTime") LocalTime fromTime, @Param("toTime") LocalTime toTime, @Param("displayField") String displayField,Pageable pageable);
+    Page<InvoiceListViewDTO> findInvoiceByDateAndTimeRangeAndDisplayField(@Param("fromDate") LocalDate fromDate, @Param("toDate") LocalDate toDate, @Param("fromTime") LocalTime fromTime, @Param("toTime") LocalTime toTime, @Param("displayField") String displayField, Pageable pageable);
     @Query(value = "SELECT i.invoice_id, i.customer_id, i.employee_id, DATE(i.date_create) AS create_date, TIME(i.date_create) AS create_time, i.status, i.total, i.note, c.customer_name, e.employee_name, i.invoice_type " +
             "FROM invoice i " +
             "JOIN customer c ON i.customer_id = c.customer_id " +
@@ -35,19 +35,19 @@ public interface IInvoiceRepository extends JpaRepository<Invoice, String> {
     Page<InvoiceListViewDTO> findInvoiceByDateAndTimeRange(@Param("fromDate") LocalDate fromDate, @Param("toDate") LocalDate toDate, @Param("fromTime") LocalTime fromTime, @Param("toTime") LocalTime toTime, Pageable pageable);
 
     @Query("SELECT s FROM Symptom s")
-    Page<Symptom> findAllSymtom(Pageable pageable);
+    List<Symptom> findAllSymtom();
 
     @Query("SELECT p FROM Prescription p")
-    Page<Prescription> findAllPrescription(Pageable pageable);
+    List<Prescription> findAllPrescription();
 
     @Query("SELECT c FROM Customer c")
-    Page<Customer> findAllCustomer(Pageable pageable);
+    List<Customer> findAllCustomer();
 
     @Query("SELECT e FROM Employee e")
-    Page<Employee> findAllEmployee(Pageable pageable);
+    List<Employee> findAllEmployee();
 
     @Query("SELECT m FROM Medicine m")
-    Page<Medicine> findAllMedicine(Pageable pageable);
+    List<Medicine> findAllMedicine();
 
 
 }

@@ -5,6 +5,7 @@ import com.codegym.a0223i1_pharmacy_professional_be.entity.Medicine;
 import com.codegym.a0223i1_pharmacy_professional_be.entity.Supplier;
 import com.codegym.a0223i1_pharmacy_professional_be.service.interfaceservice.report.IReportService;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -139,72 +140,180 @@ public class ReportController {
         return new ResponseEntity<>("Báo cáo thuốc bán chạy đã được tạo thành công", HttpStatus.OK);
     }
 
+//    private void writeWorkbook(List<?> data, String[] columnNames, String sheetName, String fileName)
+//            throws IOException, FileNotFoundException {
+//        try (
+//                Workbook workbook = new XSSFWorkbook();
+//                FileOutputStream fos = new FileOutputStream(fileName);
+//        ) {
+//            Sheet sheet = workbook.createSheet(sheetName);
+//            Row headerRow = sheet.createRow(0);
+//            for (int i = 0; i < columnNames.length; i++) {
+//                headerRow.createCell(i).setCellValue(columnNames[i]);
+//            }
+//            for (int i = 0; i < data.size(); i++) {
+//                Row row = sheet.createRow(i + 1);
+//                if (data.get(i) instanceof Medicine) {
+//                    Medicine medicine = (Medicine) data.get(i);
+//                    row.createCell(0).setCellValue(medicine.getMedicineId());
+//                    row.createCell(1).setCellValue(medicine.getMedicineName());
+//                    row.createCell(2).setCellValue(medicine.getQuantity());
+//                } else if (data.get(i) instanceof IExpiredMedicineDTO) {
+//                    IExpiredMedicineDTO medicine = (IExpiredMedicineDTO) data.get(i);
+//                    row.createCell(0).setCellValue(medicine.getMedicineId());
+//                    row.createCell(1).setCellValue(medicine.getMedicineName());
+//                    row.createCell(2).setCellValue(medicine.getExpiredDate().toString());
+//                } else if (data.get(i) instanceof ITopSellingMedicineDTO) {
+//                    ITopSellingMedicineDTO medicine = (ITopSellingMedicineDTO) data.get(i);
+//                    row.createCell(0).setCellValue(medicine.getMedicineId());
+//                    row.createCell(1).setCellValue(medicine.getMedicineName());
+//                    row.createCell(2).setCellValue(medicine.getTotalQuantity());
+//                } else if (data.get(i) instanceof IRevenueDTO) {
+//                    IRevenueDTO revenueDTO = (IRevenueDTO) data.get(i);
+//                    row.createCell(0).setCellValue(revenueDTO.getDate());
+//                    double revenueValue;
+//                    if(revenueDTO.getRevenue()==null){
+//                        revenueValue=0;
+//                    }else {
+//                        revenueValue = Double.parseDouble(revenueDTO.getRevenue());
+//                    }
+//
+//                    String revenue = String.format("%,.0f", revenueValue);
+//                    revenue = revenue.replace(',', '.');
+//                    revenue += " ₫";
+//                    Cell revenueCell = row.createCell(1);
+//                    revenueCell.setCellValue(revenue);
+//                } else if (data.get(i) instanceof ISalesDiaryDTO) {
+//                    ISalesDiaryDTO salesDiaryDTO = (ISalesDiaryDTO) data.get(i);
+//                    row.createCell(0).setCellValue(salesDiaryDTO.getEmployeeName());
+//                    row.createCell(1).setCellValue(salesDiaryDTO.getDateCreate());
+//                    row.createCell(2).setCellValue(salesDiaryDTO.getInvoiceId());
+//                    String total = String.format("%,.0f", salesDiaryDTO.getTotal());
+//                    total = total.replace(',', '.');
+//                    total += " ₫";
+//                    Cell totalCell = row.createCell(3);
+//                    totalCell.setCellValue(total);
+//                } else if (data.get(i) instanceof ISupplierDTO) {
+//                    ISupplierDTO supplier = (ISupplierDTO) data.get(i);
+//                    row.createCell(0).setCellValue(supplier.getSupplierId());
+//                    row.createCell(1).setCellValue(supplier.getSupplierName());
+//                    row.createCell(2).setCellValue(supplier.getAddress());
+//                    row.createCell(3).setCellValue(supplier.getEmail());
+//                    row.createCell(4).setCellValue(supplier.getPhoneNumber());
+//                    String debt = String.format("%,.0f", supplier.getToPayDebt());
+//                    debt = debt.replace(',', '.');
+//                    debt += " ₫";
+//                    Cell debtCell = row.createCell(5);
+//                    debtCell.setCellValue(debt);
+//                }
+//            }
+//            workbook.write(fos);
+//        } catch (FileNotFoundException e) {
+//            String errorMessage = "Không thể ghi vào tệp vì nó đang được sử dụng bởi một quá trình khác. Vui lòng đảm bảo rằng tệp không đang được mở và thử lại.";
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
+private void createCell(Row row, int columnIndex, String value, CellStyle cellStyle) {
+    Cell cell = row.createCell(columnIndex);
+    cell.setCellValue(value);
+    cell.setCellStyle(cellStyle);
+}
+    private void createCell(Row row, int columnIndex, double value, CellStyle cellStyle) {
+        Cell cell = row.createCell(columnIndex);
+        cell.setCellValue(value);
+        cell.setCellStyle(cellStyle);
+    }
+
     private void writeWorkbook(List<?> data, String[] columnNames, String sheetName, String fileName)
             throws IOException, FileNotFoundException {
-        try (
-                Workbook workbook = new XSSFWorkbook();
-                FileOutputStream fos = new FileOutputStream(fileName);
-        ) {
+        try (Workbook workbook = new XSSFWorkbook(); FileOutputStream fos = new FileOutputStream(fileName);) {
             Sheet sheet = workbook.createSheet(sheetName);
             Row headerRow = sheet.createRow(0);
+
+            // Tạo CellStyle cho các ô dữ liệu
+            CellStyle cellStyle = workbook.createCellStyle();
+            cellStyle.setBorderTop(BorderStyle.THIN);
+            cellStyle.setBorderBottom(BorderStyle.THIN);
+            cellStyle.setBorderLeft(BorderStyle.THIN);
+            cellStyle.setBorderRight(BorderStyle.THIN);
+
+            // Tạo CellStyle cho tiêu đề
+            Font headerFont = workbook.createFont();
+            headerFont.setBold(true);
+            headerFont.setColor(IndexedColors.WHITE.getIndex());
+            headerFont.setFontHeightInPoints((short) 12);
+
+            CellStyle headerCellStyle = workbook.createCellStyle();
+            headerCellStyle.setFont(headerFont);
+            headerCellStyle.setAlignment(HorizontalAlignment.CENTER);
+            headerCellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+            // Tạo một màu xanh dương nhạt
+            XSSFColor lightBlue = new XSSFColor(new java.awt.Color(173, 216, 230));
+            // Đặt màu nền cho tiêu đề
+            headerCellStyle.setFillForegroundColor(IndexedColors.LIGHT_BLUE.getIndex());
+            headerCellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+            headerCellStyle.setBorderTop(BorderStyle.THIN);
+            headerCellStyle.setBorderBottom(BorderStyle.THIN);
+            headerCellStyle.setBorderLeft(BorderStyle.THIN);
+            headerCellStyle.setBorderRight(BorderStyle.THIN);
+
             for (int i = 0; i < columnNames.length; i++) {
-                headerRow.createCell(i).setCellValue(columnNames[i]);
+                Cell cell = headerRow.createCell(i);
+                cell.setCellValue(columnNames[i]);
+                cell.setCellStyle(headerCellStyle);
             }
+
             for (int i = 0; i < data.size(); i++) {
                 Row row = sheet.createRow(i + 1);
                 if (data.get(i) instanceof Medicine) {
                     Medicine medicine = (Medicine) data.get(i);
-                    row.createCell(0).setCellValue(medicine.getMedicineId());
-                    row.createCell(1).setCellValue(medicine.getMedicineName());
-                    row.createCell(2).setCellValue(medicine.getQuantity());
+                    createCell(row, 0, medicine.getMedicineId(), cellStyle);
+                    createCell(row, 1, medicine.getMedicineName(), cellStyle);
+                    createCell(row, 2, medicine.getQuantity(), cellStyle);
                 } else if (data.get(i) instanceof IExpiredMedicineDTO) {
                     IExpiredMedicineDTO medicine = (IExpiredMedicineDTO) data.get(i);
-                    row.createCell(0).setCellValue(medicine.getMedicineId());
-                    row.createCell(1).setCellValue(medicine.getMedicineName());
-                    row.createCell(2).setCellValue(medicine.getExpiredDate().toString());
+                    createCell(row, 0, medicine.getMedicineId(), cellStyle);
+                    createCell(row, 1, medicine.getMedicineName(), cellStyle);
+                    createCell(row, 2, medicine.getExpiredDate().toString(), cellStyle);
                 } else if (data.get(i) instanceof ITopSellingMedicineDTO) {
                     ITopSellingMedicineDTO medicine = (ITopSellingMedicineDTO) data.get(i);
-                    row.createCell(0).setCellValue(medicine.getMedicineId());
-                    row.createCell(1).setCellValue(medicine.getMedicineName());
-                    row.createCell(2).setCellValue(medicine.getTotalQuantity());
+                    createCell(row, 0, medicine.getMedicineId(), cellStyle);
+                    createCell(row, 1, medicine.getMedicineName(), cellStyle);
+                    createCell(row, 2, medicine.getTotalQuantity(), cellStyle);
                 } else if (data.get(i) instanceof IRevenueDTO) {
                     IRevenueDTO revenueDTO = (IRevenueDTO) data.get(i);
-                    row.createCell(0).setCellValue(revenueDTO.getDate());
-                    double revenueValue;
-                    if(revenueDTO.getRevenue()==null){
-                        revenueValue=0;
-                    }else {
-                        revenueValue = Double.parseDouble(revenueDTO.getRevenue());
-                    }
-
-                    String revenue = String.format("%,.0f", revenueValue);
-                    revenue = revenue.replace(',', '.');
-                    revenue += " ₫";
-                    Cell revenueCell = row.createCell(1);
-                    revenueCell.setCellValue(revenue);
+                    createCell(row, 0, revenueDTO.getDate(), cellStyle);
+                    double revenueValue = revenueDTO.getRevenue() != null ? Double.parseDouble(revenueDTO.getRevenue()) : 0;
+                    String revenue = String.format("%,.0f", revenueValue).replace(',', '.') + " ₫";
+                    createCell(row, 1, revenue, cellStyle);
                 } else if (data.get(i) instanceof ISalesDiaryDTO) {
                     ISalesDiaryDTO salesDiaryDTO = (ISalesDiaryDTO) data.get(i);
-                    row.createCell(0).setCellValue(salesDiaryDTO.getEmployeeName());
-                    row.createCell(1).setCellValue(salesDiaryDTO.getDateCreate());
-                    row.createCell(2).setCellValue(salesDiaryDTO.getInvoiceId());
-                    String total = String.format("%,.0f", salesDiaryDTO.getTotal());
-                    total = total.replace(',', '.');
-                    total += " ₫";
-                    Cell totalCell = row.createCell(3);
-                    totalCell.setCellValue(total);
+                    createCell(row, 0, salesDiaryDTO.getEmployeeId(), cellStyle);
+                    createCell(row, 1, salesDiaryDTO.getEmployeeName(), cellStyle);
+                    createCell(row, 2, salesDiaryDTO.getInvoiceId(), cellStyle);
+                    createCell(row, 3, salesDiaryDTO.getSaleDate(), cellStyle);
+                    createCell(row, 4, salesDiaryDTO.getDoctorName(), cellStyle);
+                    createCell(row, 5, salesDiaryDTO.getDoctorPhone(), cellStyle);
+                    createCell(row, 6, salesDiaryDTO.getSymptom(), cellStyle);
+                    createCell(row, 7, salesDiaryDTO.getDoctorDiagnosis(), cellStyle);
+                    createCell(row, 8, salesDiaryDTO.getNote(), cellStyle);
+                    String total = String.format("%,.0f ₫", Double.parseDouble(salesDiaryDTO.getTotalInvoiceAmount())).replace(',', '.');
+                    createCell(row, 9, total, cellStyle);
                 } else if (data.get(i) instanceof ISupplierDTO) {
                     ISupplierDTO supplier = (ISupplierDTO) data.get(i);
-                    row.createCell(0).setCellValue(supplier.getSupplierId());
-                    row.createCell(1).setCellValue(supplier.getSupplierName());
-                    row.createCell(2).setCellValue(supplier.getAddress());
-                    row.createCell(3).setCellValue(supplier.getEmail());
-                    row.createCell(4).setCellValue(supplier.getPhoneNumber());
-                    String debt = String.format("%,.0f", supplier.getToPayDebt());
-                    debt = debt.replace(',', '.');
-                    debt += " ₫";
-                    Cell debtCell = row.createCell(5);
-                    debtCell.setCellValue(debt);
+                    createCell(row, 0, supplier.getSupplierId(), cellStyle);
+                    createCell(row, 1, supplier.getSupplierName(), cellStyle);
+                    createCell(row, 2, supplier.getAddress(), cellStyle);
+                    createCell(row, 3, supplier.getEmail(), cellStyle);
+                    createCell(row, 4, supplier.getPhoneNumber(), cellStyle);
+                    String debt = String.format("%,.0f ₫", supplier.getToPayDebt()).replace(',', '.');
+                    createCell(row, 5, debt, cellStyle);
                 }
+            }
+            for (int i = 0; i < columnNames.length; i++) {
+                sheet.autoSizeColumn(i);
             }
             workbook.write(fos);
         } catch (FileNotFoundException e) {
@@ -214,6 +323,7 @@ public class ReportController {
             e.printStackTrace();
         }
     }
+
 
 }
 

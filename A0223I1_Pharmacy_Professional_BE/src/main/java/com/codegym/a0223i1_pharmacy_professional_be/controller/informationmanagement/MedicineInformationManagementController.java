@@ -78,6 +78,10 @@ public class MedicineInformationManagementController {
                 case "Bằng":
                     queryString += "m." + attribute + " = :searchText";
                     break;
+                case "Gần bằng":
+                    queryString += "m." + attribute + " like :searchText";
+                    searchText = "%" + searchText + "%";
+                    break;
                 case "Lớn hơn":
                     queryString += "m." + attribute + " > :searchText";
                     break;

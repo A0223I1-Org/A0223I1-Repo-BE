@@ -41,11 +41,11 @@ public class RetailSalesManagementController {
     @Autowired
     private MedicineRepository medicineRepository;
     @GetMapping("/displayInvoice")
-    public ResponseEntity<?> findAllInvoice(@PageableDefault(page = 0, size = 10, sort = "invoice_id", direction = Sort.Direction.ASC) Pageable pageable) {
-        Page<InvoiceListViewDTO> result = invoiceService.findAllInvoice(pageable);
+    public ResponseEntity<?> findAllInvoice() {
+        List<InvoiceListViewDTO> result = invoiceService.findAllInvoice();
         if (result != null && !result.isEmpty()) {
             Map<String, Object> response = new HashMap<>();
-            response.put("data", result.getContent());
+            response.put("data", result);
             response.put("message", "Tìm danh sách hóa đơn thành công!");
             return new ResponseEntity<>(response, HttpStatus.OK);
         } else {
@@ -55,6 +55,7 @@ public class RetailSalesManagementController {
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
+
     @GetMapping("/filterInvoice")
     public ResponseEntity<?> findInvoiceByDateAndTimeRange(
             @RequestParam("fromDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate fromDate,
@@ -99,21 +100,56 @@ public class RetailSalesManagementController {
     }
 
     private Page<InvoiceListViewDTO> sortResult(Page<InvoiceListViewDTO> result, String sortField, Pageable pageable) {
-        // Sắp xếp dữ liệu theo trường sortField
-        Sort sort = Sort.by(sortField);
-        if (pageable.getSort().isSorted()) {
-            sort = sort.and(pageable.getSort());
+        // Tạo đối tượng Comparator để sắp xếp dữ liệu theo trường sortField
+        Comparator<InvoiceListViewDTO> comparator = null;
+
+        switch (sortField) {
+            case "customer_name":
+                comparator = Comparator.comparing(InvoiceListViewDTO::getCustomer_name);
+                break;
+            case "date_create":
+                comparator = Comparator.comparing(InvoiceListViewDTO::getCreate_date)
+                        .thenComparing(InvoiceListViewDTO::getCreate_time); // Sắp xếp theo ngày lập và giờ lập
+                break;
+            case "employee_name":
+                comparator = Comparator.comparing(InvoiceListViewDTO::getEmployee_name);
+                break;
+            case "total":
+                comparator = Comparator.comparing(InvoiceListViewDTO::getTotal);
+                break;
+            default:
+                // Trường mặc định hoặc trường không được hỗ trợ, không thực hiện sắp xếp
+                break;
         }
-        return new PageImpl<>(result.getContent(), pageable, result.getTotalElements());
+
+        // Xác định hướng sắp xếp
+        if (comparator != null && pageable.getSort().isSorted()) {
+            Sort.Order order = pageable.getSort().getOrderFor(sortField);
+            if (order != null && order.getDirection() == Sort.Direction.DESC) {
+                comparator = comparator.reversed(); // Đảo ngược nếu hướng sắp xếp là giảm dần
+            }
+        }
+
+        // Sắp xếp danh sách kết quả nếu có Comparator
+        if (comparator != null) {
+            List<InvoiceListViewDTO> sortedContent = new ArrayList<>(result.getContent());
+            sortedContent.sort(comparator);
+
+            // Tạo đối tượng Page mới với dữ liệu đã được sắp xếp
+            return new PageImpl<>(sortedContent, pageable, result.getTotalElements());
+        }
+
+        // Nếu không có Comparator hoặc không có sắp xếp, trả về danh sách không thay đổi
+        return result;
     }
 
 
     @GetMapping("/displaySymtom")
-    public ResponseEntity<?> findAllSymtom(@PageableDefault(page = 0, size = 10, sort = "symptomId", direction = Sort.Direction.ASC) Pageable pageable) {
-        Page<Symptom> result = invoiceService.findAllSymtom(pageable);
+    public ResponseEntity<?> findAllSymtom() {
+        List<Symptom> result = invoiceService.findAllSymtom();
         if (result != null && !result.isEmpty()) {
             Map<String, Object> response = new HashMap<>();
-            response.put("data", result.getContent());
+            response.put("data", result);
             response.put("message", "Tìm danh sách triệu chứng thành công!");
             return new ResponseEntity<>(response, HttpStatus.OK);
         } else {
@@ -125,11 +161,11 @@ public class RetailSalesManagementController {
     }
 
     @GetMapping("/displayPrescription")
-    public ResponseEntity<?> findAllPrescription(@PageableDefault(page = 0, size = 10, sort = "prescriptionId", direction = Sort.Direction.ASC) Pageable pageable) {
-        Page<Prescription> result = invoiceService.findAllPrescription(pageable);
+    public ResponseEntity<?> findAllPrescription() {
+        List<Prescription> result = invoiceService.findAllPrescription();
         if (result != null && !result.isEmpty()) {
             Map<String, Object> response = new HashMap<>();
-            response.put("data", result.getContent());
+            response.put("data", result);
             response.put("message", "Tìm danh sách toa thuốc thành công!");
             return new ResponseEntity<>(response, HttpStatus.OK);
         } else {
@@ -141,11 +177,11 @@ public class RetailSalesManagementController {
     }
 
     @GetMapping("/displayCustomer")
-    public ResponseEntity<?> findAllCustomer(@PageableDefault(page = 0, size = 10, sort = "customerId", direction = Sort.Direction.ASC) Pageable pageable) {
-        Page<Customer> result = invoiceService.findAllCustomer(pageable);
+    public ResponseEntity<?> findAllCustomer() {
+        List<Customer> result = invoiceService.findAllCustomer();
         if (result != null && !result.isEmpty()) {
             Map<String, Object> response = new HashMap<>();
-            response.put("data", result.getContent());
+            response.put("data", result);
             response.put("message", "Tìm danh sách khách hàng thành công!");
             return new ResponseEntity<>(response, HttpStatus.OK);
         } else {
@@ -157,11 +193,11 @@ public class RetailSalesManagementController {
     }
 
     @GetMapping("/displayEmployee")
-    public ResponseEntity<?> findAllEmployee(@PageableDefault(page = 0, size = 10, sort = "employeeId", direction = Sort.Direction.ASC) Pageable pageable) {
-        Page<Employee> result = invoiceService.findAllEmployee(pageable);
+    public ResponseEntity<?> findAllEmployee() {
+        List<Employee> result = invoiceService.findAllEmployee();
         if (result != null && !result.isEmpty()) {
             Map<String, Object> response = new HashMap<>();
-            response.put("data", result.getContent());
+            response.put("data", result);
             response.put("message", "Tìm danh sách nhân viên thành công!");
             return new ResponseEntity<>(response, HttpStatus.OK);
         } else {
@@ -173,11 +209,11 @@ public class RetailSalesManagementController {
     }
 
     @GetMapping("/displayMedicine")
-    public ResponseEntity<?> findAllMedicine(@PageableDefault(page = 0, size = 10, sort = "medicineId", direction = Sort.Direction.ASC) Pageable pageable) {
-        Page<Medicine> result = invoiceService.findAllMedicine(pageable);
+    public ResponseEntity<?> findAllMedicine() {
+        List<Medicine> result = invoiceService.findAllMedicine();
         if (result != null && !result.isEmpty()) {
             Map<String, Object> response = new HashMap<>();
-            response.put("data", result.getContent());
+            response.put("data", result);
             response.put("message", "Tìm danh sách thuốc thành công!");
             return new ResponseEntity<>(response, HttpStatus.OK);
         } else {
