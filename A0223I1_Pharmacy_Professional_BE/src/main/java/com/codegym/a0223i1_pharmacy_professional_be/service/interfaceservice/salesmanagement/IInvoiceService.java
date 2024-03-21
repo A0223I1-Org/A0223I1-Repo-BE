@@ -10,15 +10,15 @@ import java.time.LocalTime;
 import java.util.List;
 
 public interface IInvoiceService {
-    Page<InvoiceListViewDTO> findAllInvoice(Pageable pageable);
+    List<InvoiceListViewDTO> findAllInvoice();
 
-    Page<InvoiceListViewDTO> findInvoiceByDateAndTimeRangeAndDisplayField(LocalDate fromDate,  LocalDate toDate,  LocalTime fromTime, LocalTime toTime, String displayField,Pageable pageable);
+    Page<InvoiceListViewDTO> findInvoiceByDateAndTimeRangeAndDisplayField(LocalDate fromDate,  LocalDate toDate,  LocalTime fromTime, LocalTime toTime, String displayField, Pageable pageable);
     Page<InvoiceListViewDTO> findInvoiceByDateAndTimeRange(LocalDate fromDate,  LocalDate toDate,  LocalTime fromTime, LocalTime toTime, Pageable pageable);
-    Page<Symptom> findAllSymtom(Pageable pageable);
-    Page<Prescription> findAllPrescription(Pageable pageable);
-    Page<Customer> findAllCustomer(Pageable pageable);
-    Page<Employee> findAllEmployee(Pageable pageable);
-    Page<Medicine> findAllMedicine(Pageable pageable);
+    List<Symptom> findAllSymtom();
+    List<Prescription> findAllPrescription();
+    List<Customer> findAllCustomer();
+    List<Employee> findAllEmployee();
+    List<Medicine> findAllMedicine();
 
     void saveInvoice(Invoice invoice);
     void saveInvoiceDetails(List<InvoiceDetail> invoiceDetails);

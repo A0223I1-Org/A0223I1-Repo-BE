@@ -11,6 +11,7 @@ import com.codegym.a0223i1_pharmacy_professional_be.validate.CustomerValidate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,47 +32,79 @@ public class CustomerManagementController {
     @Autowired
     private CustomerValidate customerValidate;
 
+    @GetMapping("/lists")
+    public ResponseEntity<?> getAllCustomer(@RequestParam(value = "page", defaultValue = "10") Integer page){
+        Page<Customer> customers = iCustomerService.getAllCustomer(Pageable.ofSize(page));
+        if (customers.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(customers, HttpStatus.OK);
+    }
     @GetMapping("/list")
-    public ResponseEntity<?> getAllCustomer(@RequestParam(defaultValue = "") String find,
-                                            @RequestParam(value = "page", defaultValue = "0") Integer page,
-                                            @RequestParam(value = "size", defaultValue = "3") Integer size) {
-        Page<Customer> customers = iCustomerService.getAllCustomer(find, PageRequest.of(page, size));
-        return new ResponseEntity<>(customers, HttpStatus.OK);
-    }
-
-    @GetMapping("/list/searchByName")
-    public ResponseEntity<?> getAllCustomerByName(@RequestParam(value = "customerName", defaultValue = "") String customerName,
-                                                  @RequestParam(value = "page", defaultValue = "0") Integer page) {
-        Page<Customer> customers = iCustomerService.getAllCustomerByName(customerName, PageRequest.of(page, 4));
-        System.out.println(customers);
-        if (customers.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    public ResponseEntity<Page<?>> getAllCustomer(@RequestParam String sortOption,
+                                                  @RequestParam String searchType,
+                                                  @RequestParam String searchValue,
+                                                  Pageable pageable) {
+        Page<Customer> customers = null;
+        if (searchType != null && !searchType.isEmpty() && searchValue != null && !searchValue.isEmpty()) {
+            switch (searchType) {
+                case "customerId":
+                    customers = iCustomerService.getCustomerById(searchValue, pageable);
+                    break;
+                case "customerName":
+                    customers = iCustomerService.getAllCustomerByName(searchValue, pageable);
+                    break;
+                case "customerType":
+                    customers = iCustomerService.getAllCustomerByType(searchValue, pageable);
+                    break;
+                case "address":
+                    customers = iCustomerService.getCustomerByAddress(searchValue, pageable);
+                    break;
+                case "phoneNumber":
+                    customers = iCustomerService.getAllCustomerByPhoneNumber(searchValue, pageable);
+                    break;
+            }
+        } else if (sortOption != null && !sortOption.isEmpty()) {
+            switch (sortOption) {
+                case "customerId":
+                    customers = iCustomerService.getAllOrderByCustomerId(pageable);
+                    break;
+                case "customerName":
+                    customers = iCustomerService.getAllOrderByCustomerName(pageable);
+                    break;
+                case "address":
+                    customers = iCustomerService.getAllOrderByCustomerAddress(pageable);
+                    break;
+                case "customerType":
+                    customers = iCustomerService.getAllOrderByCustomerType(pageable);
+                    break;
+                case "phoneNumber":
+                    customers = iCustomerService.getAllOrderByPhoneNumber(pageable);
+                    break;
+            }
+        } else {
+            customers = iCustomerService.getAllOrderByCustomerId(pageable);
         }
         return new ResponseEntity<>(customers, HttpStatus.OK);
     }
 
-    @GetMapping("/list/searchByAge")
-    public ResponseEntity<?> getAllCustomerByAge(@RequestParam(value = "age", defaultValue = "18") Integer age,
-                                                 @RequestParam(value = "page", defaultValue = "0") Integer page) {
-        Page<Customer> customers = iCustomerService.getAllCustomerByAge(age, PageRequest.of(page, 4));
-        if (customers.isEmpty()) {
+
+    @GetMapping("/listPhone")
+    public ResponseEntity<?> getAllPhoneNumber() {
+        List<String> phones = iCustomerService.getAllPhoneNumber();
+        if (phones.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(customers, HttpStatus.OK);
+        return new ResponseEntity<>(phones, HttpStatus.OK);
     }
 
-    @GetMapping("/list/searchByType")
-    public ResponseEntity<?> getAllCustomerByType(@RequestParam(value = "customerType", defaultValue = "") String customerType,
-                                                  @RequestParam(value = "page", defaultValue = "0") Integer page) {
-        Page<Customer> customers = iCustomerService.getAllCustomerByType(customerType, PageRequest.of(page, 4));
-        if (customers.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        return new ResponseEntity<>(customers, HttpStatus.OK);
-    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteCustomer(@PathVariable String id) {
+        Customer customer= iCustomerService.getCustomerById(id);
+        if (customer==null){
+            return new ResponseEntity<>("Khách hàng không tồn tại",HttpStatus.BAD_REQUEST);
+        }
         iCustomerService.deleteCustomer(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -80,15 +113,20 @@ public class CustomerManagementController {
     public ResponseEntity<?> findCustomerById(@PathVariable String id) {
         Customer customer = iCustomerService.getCustomerById(id);
         if (customer == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Khách hàng không tồn tại",HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(customer, HttpStatus.OK);
     }
 
 
     @GetMapping(value = "/getAllInvoiceCustomer")
-    public ResponseEntity<?> getAllInvoiceCustomer(@RequestParam(defaultValue = "") String id) {
-        List<IInvoiceDTO> invoice = iCustomerService.getAllInvoiceCustomer(id);
+    public ResponseEntity<?> getAllInvoiceCustomer(@RequestParam(defaultValue = "") String id,
+                                                   @RequestParam(required = false) String startDay,
+                                                   @RequestParam(required = false) String endDay,
+                                                   @RequestParam(required = false) String startHour,
+                                                   @RequestParam(required = false) String endHour,Pageable pageable) {
+
+        Page<IInvoiceDTO> invoice = iCustomerService.getAllInvoiceCustomer(id,startDay,endDay,startHour,endHour,pageable);
         if (invoice == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -103,7 +141,6 @@ public class CustomerManagementController {
             Map<String, String> errors = customerValidate.validate(customerDTO);
             if (errors.isEmpty()) {
                 Account account = new Account();
-                account.setEmail(customerDTO.getCustomerName());
                 account.setPassword("123");
                 account.setDeleteFlag(false);
                 account = iAccountService.registerAccount(account);

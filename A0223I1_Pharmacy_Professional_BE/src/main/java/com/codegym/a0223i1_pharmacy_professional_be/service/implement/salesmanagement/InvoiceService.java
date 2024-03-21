@@ -25,13 +25,13 @@ public class InvoiceService implements IInvoiceService {
     @Autowired
     private IInvoiceDetailRepository iInvoiceDetailRepository;
     @Override
-    public Page<InvoiceListViewDTO> findAllInvoice(Pageable pageable) {
-        return iInvoiceRepository.findAllInvoice(pageable);
+    public List<InvoiceListViewDTO> findAllInvoice() {
+        return iInvoiceRepository.findAllInvoice();
 
     }
 
     @Override
-    public Page<InvoiceListViewDTO> findInvoiceByDateAndTimeRangeAndDisplayField(LocalDate fromDate, LocalDate toDate, LocalTime fromTime, LocalTime toTime, String displayField,Pageable pageable) {
+    public Page<InvoiceListViewDTO> findInvoiceByDateAndTimeRangeAndDisplayField(LocalDate fromDate, LocalDate toDate, LocalTime fromTime, LocalTime toTime, String displayField, Pageable pageable) {
         return iInvoiceRepository.findInvoiceByDateAndTimeRangeAndDisplayField(fromDate, toDate, fromTime, toTime, displayField, pageable);
     }
 
@@ -41,28 +41,28 @@ public class InvoiceService implements IInvoiceService {
     }
 
     @Override
-    public Page<Symptom> findAllSymtom(Pageable pageable) {
-        return iInvoiceRepository.findAllSymtom(pageable);
+    public List<Symptom> findAllSymtom() {
+        return iInvoiceRepository.findAllSymtom();
     }
 
     @Override
-    public Page<Prescription> findAllPrescription(Pageable pageable) {
-        return iInvoiceRepository.findAllPrescription(pageable);
+    public List<Prescription> findAllPrescription() {
+        return iInvoiceRepository.findAllPrescription();
     }
 
     @Override
-    public Page<Customer> findAllCustomer(Pageable pageable) {
-        return iInvoiceRepository.findAllCustomer(pageable);
+    public List<Customer> findAllCustomer() {
+        return iInvoiceRepository.findAllCustomer();
     }
 
     @Override
-    public Page<Employee> findAllEmployee(Pageable pageable) {
-        return iInvoiceRepository.findAllEmployee(pageable);
+    public List<Employee> findAllEmployee() {
+        return iInvoiceRepository.findAllEmployee();
     }
 
     @Override
-    public Page<Medicine> findAllMedicine(Pageable pageable) {
-        return iInvoiceRepository.findAllMedicine(pageable);
+    public List<Medicine> findAllMedicine() {
+        return iInvoiceRepository.findAllMedicine();
     }
 
     @Transactional

@@ -42,8 +42,8 @@ public class Prescription {
     @JsonBackReference
     List<PrescriptionDetail> prescriptionDetails;
 
-    @OneToMany(mappedBy = "prescription")
-    @JsonBackReference
-    List<Invoice> invoices;
+//    @OneToMany(mappedBy = "prescription")
+//    @JsonBackReference
+//    List<Invoice> invoices;
 
 }
