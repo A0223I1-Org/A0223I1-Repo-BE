@@ -20,7 +20,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @RestController
@@ -49,6 +52,7 @@ public class PrescriptionManagementController {
                 prescription.setSymptomName(symptom.getSymptomName());
             }
         }
+        Collections.sort(prescriptionList, Comparator.comparing(Prescription::getCreateDate).reversed());
 
         return ResponseEntity.ok(prescriptionList);
     }
@@ -94,6 +98,8 @@ public class PrescriptionManagementController {
                 Symptom symptom = new Symptom();
                 symptom.setSymptomName(detailPrescriptionDTO.getPrescription().getSymptom().getSymptomName());
 
+                LocalDateTime createDate = LocalDateTime.now();
+
 
                 Prescription prescription = new Prescription();
                 prescription.setPrescriptionName(detailPrescriptionDTO.getPrescription().getPrescriptionName());
@@ -101,6 +107,7 @@ public class PrescriptionManagementController {
                 prescription.setTreatmentPeriod(detailPrescriptionDTO.getPrescription().getTreatmentPeriod());
                 prescription.setNote(detailPrescriptionDTO.getPrescription().getNote());
                 prescription.setDeleteFlag(detailPrescriptionDTO.getDeleteFlag());
+                prescription.setCreateDate(createDate);
                 prescription.setPrescriptionId(prescriptionService.generateNextCode());
                 prescription.setSymptom(symptom);
 

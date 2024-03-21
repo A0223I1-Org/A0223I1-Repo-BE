@@ -31,13 +31,9 @@ public class Invoice {
 
     private Float total;
 
-//    @ManyToOne
-//    @JoinColumn(name = "prescription_id")
-//    private Prescription prescription;
 
     @ManyToOne
     @JsonBackReference
-
     @JoinColumn(name = "employee_id", referencedColumnName = "employee_id")
     private Employee employee;
 
