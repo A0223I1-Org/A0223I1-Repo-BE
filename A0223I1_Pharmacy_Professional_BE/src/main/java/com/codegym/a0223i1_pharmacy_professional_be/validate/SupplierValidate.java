@@ -2,7 +2,7 @@ package com.codegym.a0223i1_pharmacy_professional_be.validate;
 
 import com.codegym.a0223i1_pharmacy_professional_be.dto.SupplierDTO;
 import com.codegym.a0223i1_pharmacy_professional_be.entity.Supplier;
-import com.codegym.a0223i1_pharmacy_professional_be.repository.supplier.ISupplierRepository;
+import com.codegym.a0223i1_pharmacy_professional_be.repository.informationmanagement.ISupplierRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,10 +22,6 @@ public class SupplierValidate {
     private final Pattern PATTERN_EMAIL = Pattern.compile("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$");
     private final Pattern PATTERN_PHONE = Pattern.compile("^[0-9]+$");
 
-    public boolean isSupplierIdUnique(String supplierId) {
-        Supplier existingSupplier = supplierRepository.findSupplierById(supplierId);
-        return existingSupplier == null;
-    }
 
     public Map<String,String> validate(SupplierDTO supplierDTO) {
         Map<String,String> errors = new HashMap<>();
@@ -35,10 +31,6 @@ public class SupplierValidate {
             errors.put("errorIdEmpty","Mã nhà cung cấp không được trống!");
         } else if (supplierDTO.getSupplierId().length() > 50) {
             errors.put("errorIdLength","Mã nhà cung cấp không được quá 50 ký tự");
-        } else if (!PATTERN_ID.matcher(supplierDTO.getSupplierId()).matches()) {
-            errors.put("errorIdSpecialCharacter","Mã nhà cung cấp không được chứa các kí tự đặc biệt");
-        } else if (!isSupplierIdUnique(supplierDTO.getSupplierId())) {
-            errors.put("errorIdNotUnique","Mã nhà cung cấp đã tồn tại");
         }
 
         if (supplierDTO.getSupplierName() == null || supplierDTO.getSupplierName().isEmpty()) {
@@ -46,9 +38,6 @@ public class SupplierValidate {
         }
         if (supplierDTO.getSupplierName().length() > 50) {
             errors.put("errorNameLength","Tên nhà cung cấp không được quá 50 ký tự");
-        }
-        if (!PATTERN_NAME.matcher(supplierDTO.getSupplierName()).matches()) {
-            errors.put("errorNameSpecialCharacter","Tên nhà cung cấp không được chứa các kí tự đặc biệt");
         }
 
 
@@ -60,11 +49,8 @@ public class SupplierValidate {
         }
 
 
-        if (supplierDTO.getAddress().length() > 50) {
-            errors.put("errorAddressLength","Địa chỉ không được quá 50 ký tự");
-        }
-        if (!PATTERN_ADDRESS.matcher(supplierDTO.getAddress()).matches()) {
-            errors.put("errorAddressFormat","Địa chỉ không hợp lệ");
+        if (supplierDTO.getAddress().length() > 255) {
+            errors.put("errorAddressLength","Địa chỉ không được quá 255 ký tự");
         }
 
 
@@ -75,8 +61,8 @@ public class SupplierValidate {
             errors.put("errorEmailFormat","Email không hợp lệ");
         }
 
-        if (supplierDTO.getNote().length() > 25) {
-            errors.put("errorNoteLength","Ghi chú không được quá 25 ký tự");
+        if (supplierDTO.getNote().length() > 255) {
+            errors.put("errorNoteLength","Ghi chú không được quá 255 ký tự");
         }
         return errors;
     }

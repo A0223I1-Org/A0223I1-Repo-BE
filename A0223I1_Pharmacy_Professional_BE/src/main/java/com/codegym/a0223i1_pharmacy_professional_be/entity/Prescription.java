@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -38,12 +39,12 @@ public class Prescription {
     @Transient
     private String symptomName;
 
-    @OneToMany(mappedBy = "prescription")
-    @JsonBackReference
-    List<PrescriptionDetail> prescriptionDetails;
+    @Column(name = "create_date")
+    private LocalDateTime createDate;
 
     @OneToMany(mappedBy = "prescription")
-    @JsonBackReference
-    List<Invoice> invoices;
+    List<PrescriptionDetail> prescriptionDetails;
+
+
 
 }
