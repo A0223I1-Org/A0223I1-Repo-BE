@@ -32,7 +32,7 @@ public class Employee {
 
     private String image;
 
-    @JsonBackReference(value = "account")
+    @JsonBackReference
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "account_id", referencedColumnName = "account_id")
     private Account account;
@@ -42,8 +42,10 @@ public class Employee {
     List<Invoice> invoices;
 
     @OneToMany(mappedBy = "employee")
+    @JsonBackReference
     List<WarehouseIn> warehouseIns;
 
     @OneToMany(mappedBy = "employee")
+    @JsonBackReference
     List<WarehouseOut> warehouseOuts;
 }

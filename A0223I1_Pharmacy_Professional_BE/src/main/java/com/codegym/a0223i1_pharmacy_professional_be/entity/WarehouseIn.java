@@ -1,5 +1,6 @@
 package com.codegym.a0223i1_pharmacy_professional_be.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 import java.sql.Timestamp;
@@ -30,10 +31,12 @@ public class WarehouseIn {
     private Float totalAmount;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "supplier_id", referencedColumnName = "supplier_id")
     private Supplier supplier;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "employee_id", referencedColumnName = "employee_id")
     private Employee employee;
 

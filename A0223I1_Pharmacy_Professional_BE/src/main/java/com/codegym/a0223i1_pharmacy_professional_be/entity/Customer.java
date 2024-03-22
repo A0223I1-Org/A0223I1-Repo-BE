@@ -42,6 +42,7 @@ public class Customer {
     @JsonBackReference
     @OneToOne(cascade = CascadeType.ALL, optional = true, mappedBy = "customer")
     private Cart cart;
+
     @JsonBackReference
     @OneToMany(mappedBy = "customer")
     List<Invoice> invoices;

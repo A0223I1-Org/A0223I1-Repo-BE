@@ -15,7 +15,7 @@ import org.springframework.stereotype.Repository;
 public interface ISupplierRepository extends JpaRepository<Supplier, String> {
 
     @Query(value = "SELECT supplier_id, supplier_name, address, phone_number, to_pay_debt, note, delete_flag, email " +
-            "FROM a0223i1_pharmacy.supplier " +
+            "FROM supplier " +
             "WHERE supplier.delete_flag = 0 " +
             "AND (?1 IS NULL OR supplier.supplier_id LIKE CONCAT('%', ?1, '%')) " +
             "AND (?2 IS NULL OR supplier.supplier_name LIKE CONCAT('%', ?2, '%')) " +
@@ -25,7 +25,7 @@ public interface ISupplierRepository extends JpaRepository<Supplier, String> {
     Page<Supplier> findAllBySupplierId(String id, String supplierName, String address, String phoneNumber, Pageable pageable);
 
     @Query(value = "SELECT supplier_id, supplier_name, address, phone_number, to_pay_debt, note, delete_flag, email " +
-            "FROM a0223i1_pharmacy.supplier " +
+            "FROM supplier " +
             "WHERE supplier.delete_flag = 0 " +
             "AND (?1 IS NULL OR supplier.supplier_id LIKE CONCAT('%', ?1, '%')) " +
             "AND (?2 IS NULL OR supplier.supplier_name LIKE CONCAT('%', ?2, '%')) " +
@@ -35,7 +35,7 @@ public interface ISupplierRepository extends JpaRepository<Supplier, String> {
     Page<Supplier> findAllBySupplierName(String id, String supplierName, String address, String phoneNumber, Pageable pageable);
 
     @Query(value = "SELECT supplier_id, supplier_name, address, phone_number, to_pay_debt, note, delete_flag, email " +
-            "FROM a0223i1_pharmacy.supplier " +
+            "FROM supplier " +
             "WHERE supplier.delete_flag = 0 " +
             "AND (?1 IS NULL OR supplier.supplier_id LIKE CONCAT('%', ?1, '%')) " +
             "AND (?2 IS NULL OR supplier.supplier_name LIKE CONCAT('%', ?2, '%')) " +
@@ -45,7 +45,7 @@ public interface ISupplierRepository extends JpaRepository<Supplier, String> {
     Page<Supplier> findAllByAddress(String id, String supplierName, String address, String phoneNumber, Pageable pageable);
 
     @Query(value = "SELECT supplier_id, supplier_name, address, phone_number, to_pay_debt, note, delete_flag, email " +
-            "FROM a0223i1_pharmacy.supplier " +
+            "FROM supplier " +
             "WHERE supplier.delete_flag = 0 " +
             "AND (?1 IS NULL OR supplier.supplier_id LIKE CONCAT('%', ?1, '%')) " +
             "AND (?2 IS NULL OR supplier.supplier_name LIKE CONCAT('%', ?2, '%')) " +
@@ -56,7 +56,7 @@ public interface ISupplierRepository extends JpaRepository<Supplier, String> {
 
 
     @Query(value = "SELECT supplier_id, supplier_name, address, phone_number, to_pay_debt, note, delete_flag, email " +
-            "FROM a0223i1_pharmacy.supplier " +
+            "FROM supplier " +
             "WHERE supplier.supplier_id = ?1" , nativeQuery = true)
     Supplier findSupplierById(String id);
 

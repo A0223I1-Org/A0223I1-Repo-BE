@@ -2,6 +2,7 @@ package com.codegym.a0223i1_pharmacy_professional_be.service.implement.salesmana
 
 import com.codegym.a0223i1_pharmacy_professional_be.dto.InvoiceListViewDTO;
 import com.codegym.a0223i1_pharmacy_professional_be.entity.*;
+import com.codegym.a0223i1_pharmacy_professional_be.repository.informationmanagement.IEmployeeRepository;
 import com.codegym.a0223i1_pharmacy_professional_be.repository.salesmanagement.IInvoiceDetailRepository;
 import com.codegym.a0223i1_pharmacy_professional_be.repository.salesmanagement.IInvoiceRepository;
 import com.codegym.a0223i1_pharmacy_professional_be.service.interfaceservice.salesmanagement.IInvoiceService;
@@ -24,6 +25,9 @@ public class InvoiceService implements IInvoiceService {
 
     @Autowired
     private IInvoiceDetailRepository iInvoiceDetailRepository;
+
+    @Autowired
+    private IEmployeeRepository iEmployeeRepository;
     @Override
     public List<InvoiceListViewDTO> findAllInvoice() {
         return iInvoiceRepository.findAllInvoice();

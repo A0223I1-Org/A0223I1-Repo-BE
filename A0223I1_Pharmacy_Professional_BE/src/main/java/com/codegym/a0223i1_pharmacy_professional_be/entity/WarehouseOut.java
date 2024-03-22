@@ -4,6 +4,8 @@ package com.codegym.a0223i1_pharmacy_professional_be.entity;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -31,10 +33,12 @@ public class WarehouseOut {
     private Float totalAmount;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "supplier_id", referencedColumnName = "supplier_id")
     private Supplier supplier;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "employee_id", referencedColumnName = "employee_id")
     private Employee employee;
 

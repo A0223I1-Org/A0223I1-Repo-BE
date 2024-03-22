@@ -2,7 +2,7 @@ package com.codegym.a0223i1_pharmacy_professional_be.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-
+import com.fasterxml.jackson.annotation.*;
 import java.util.List;
 import java.util.Set;
 
@@ -29,9 +29,12 @@ public class Account {
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
     List<AccountRole> accountRoles;
 
+    @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL, optional = true, mappedBy = "account")
     private Customer customer;
 
+    @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL, optional = true, mappedBy = "account")
     private Employee employee;
+
 }

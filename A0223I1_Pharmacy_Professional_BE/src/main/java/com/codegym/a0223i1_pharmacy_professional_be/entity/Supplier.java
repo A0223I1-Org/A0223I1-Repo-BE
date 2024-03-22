@@ -1,5 +1,6 @@
 package com.codegym.a0223i1_pharmacy_professional_be.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -39,9 +40,11 @@ public class Supplier {
     @Column(name = "delete_flag")
     private Boolean deleteFlag;
 
+    @JsonBackReference
     @OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL)
     List<WarehouseIn> warehouseIns;
 
+    @JsonBackReference
     @OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL)
     Set<WarehouseOut> warehouseOuts;
 
