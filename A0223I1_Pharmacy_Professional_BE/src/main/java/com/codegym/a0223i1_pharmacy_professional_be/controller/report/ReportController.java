@@ -96,15 +96,26 @@ public class ReportController {
         return new ResponseEntity<>("Báo cáo công nợ của các nhà cung cấp đã được tạo thành công", HttpStatus.OK);
     }
 
+    //    private ResponseEntity<?> salesDiary
+//            (String startDate, String endDate, String startTime, String endTime) throws IOException {
+//        List<ISalesDiaryDTO> iSalesDiaryDTOS = iReportService.salesDiary(startDate, endDate, startTime, endTime);
+//        if (iSalesDiaryDTOS.isEmpty()) {
+//            return new ResponseEntity<>("Không có dữ liệu nhật ký bán hàng trong khoảng thời gian đã chọn", HttpStatus.NOT_FOUND);
+//        }
+//
+//        String[] columnNames = {"Tên nhân viên", "Ngày tạo", "Mã hóa đơn", "Tổng tiền"};
+//        writeWorkbook(iSalesDiaryDTOS, columnNames, "Nhật ký bán hàng", "D:\\nhatkybanhang.xlsx");
+//        return new ResponseEntity<>("Báo cáo nhật ký bán hàng đã được tạo thành công", HttpStatus.OK);
+//    }
     private ResponseEntity<?> salesDiary
-            (String startDate, String endDate, String startTime, String endTime) throws IOException {
+    (String startDate, String endDate, String startTime, String endTime) throws IOException {
         List<ISalesDiaryDTO> iSalesDiaryDTOS = iReportService.salesDiary(startDate, endDate, startTime, endTime);
         if (iSalesDiaryDTOS.isEmpty()) {
             return new ResponseEntity<>("Không có dữ liệu nhật ký bán hàng trong khoảng thời gian đã chọn", HttpStatus.NOT_FOUND);
         }
-        String[] columnNames = {"Tên nhân viên", "Ngày tạo", "Mã hóa đơn", "Tổng tiền"};
+        String[] columnNames = {"Mã nhân viên", "Tên nhân viên", "Mã hóa đơn", "Ngày tạo", "Tên bác sĩ", "Số điện thoại bác sĩ", "Triệu chứng", "Chuẩn đoán", "Ghi chú", "Tổng tiền"};
         writeWorkbook(iSalesDiaryDTOS, columnNames, "Nhật ký bán hàng", "D:\\nhatkybanhang.xlsx");
-        return new ResponseEntity<>("Báo cáo nhật ký bán hàng đã được tạo thành công", HttpStatus.OK);
+        return new ResponseEntity<>("Báo cáo nhật ký bán hàng đã được xuất thành công trong khoảng thời gian đã chọn", HttpStatus.OK);
     }
 
     private ResponseEntity<?> getAllDrugEnterReport() throws IOException {
@@ -140,7 +151,7 @@ public class ReportController {
         return new ResponseEntity<>("Báo cáo thuốc bán chạy đã được tạo thành công", HttpStatus.OK);
     }
 
-//    private void writeWorkbook(List<?> data, String[] columnNames, String sheetName, String fileName)
+    //    private void writeWorkbook(List<?> data, String[] columnNames, String sheetName, String fileName)
 //            throws IOException, FileNotFoundException {
 //        try (
 //                Workbook workbook = new XSSFWorkbook();
@@ -215,11 +226,12 @@ public class ReportController {
 //            e.printStackTrace();
 //        }
 //    }
-private void createCell(Row row, int columnIndex, String value, CellStyle cellStyle) {
-    Cell cell = row.createCell(columnIndex);
-    cell.setCellValue(value);
-    cell.setCellStyle(cellStyle);
-}
+    private void createCell(Row row, int columnIndex, String value, CellStyle cellStyle) {
+        Cell cell = row.createCell(columnIndex);
+        cell.setCellValue(value);
+        cell.setCellStyle(cellStyle);
+    }
+
     private void createCell(Row row, int columnIndex, double value, CellStyle cellStyle) {
         Cell cell = row.createCell(columnIndex);
         cell.setCellValue(value);
@@ -299,8 +311,12 @@ private void createCell(Row row, int columnIndex, String value, CellStyle cellSt
                     createCell(row, 6, salesDiaryDTO.getSymptom(), cellStyle);
                     createCell(row, 7, salesDiaryDTO.getDoctorDiagnosis(), cellStyle);
                     createCell(row, 8, salesDiaryDTO.getNote(), cellStyle);
-                    String total = String.format("%,.0f ₫", Double.parseDouble(salesDiaryDTO.getTotalInvoiceAmount())).replace(',', '.');
-                    createCell(row, 9, total, cellStyle);
+                    if (salesDiaryDTO.getTotalInvoiceAmount() == null) {
+                        createCell(row, 9, 0, cellStyle);
+                    } else {
+                        String total = String.format("%,.0f ₫", Double.parseDouble(salesDiaryDTO.getTotalInvoiceAmount())).replace(',', '.');
+                        createCell(row, 9, total, cellStyle);
+                    }
                 } else if (data.get(i) instanceof ISupplierDTO) {
                     ISupplierDTO supplier = (ISupplierDTO) data.get(i);
                     createCell(row, 0, supplier.getSupplierId(), cellStyle);

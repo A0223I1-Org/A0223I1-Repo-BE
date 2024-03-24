@@ -17,7 +17,7 @@ public interface PrescriptionRepository extends JpaRepository<Prescription, Stri
     List<Prescription> findAllPrescription();
 
     @Modifying
-    @Query(value = "UPDATE prescription SET delete_flag = 0 WHERE id = :id", nativeQuery = true)
+    @Query(value = "UPDATE prescription SET delete_flag = 0 WHERE prescription_id = :id", nativeQuery = true)
     void deletePrescription(@Param("id") String id);
 
     @Query(value = "SELECT p.prescription_id, p.prescription_name, p.target, p.create_date, p.note, p.treatment_period, p.delete_flag, p.symptom_id " +

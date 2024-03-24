@@ -5,6 +5,7 @@ import com.codegym.a0223i1_pharmacy_professional_be.dto.CustomerDTO;
 import com.codegym.a0223i1_pharmacy_professional_be.dto.IInvoiceDTO;
 import com.codegym.a0223i1_pharmacy_professional_be.entity.Account;
 import com.codegym.a0223i1_pharmacy_professional_be.entity.Customer;
+import com.codegym.a0223i1_pharmacy_professional_be.repository.customermanagement.ICustomerRepository;
 import com.codegym.a0223i1_pharmacy_professional_be.service.interfaceservice.accountmanagement.IAccountService;
 import com.codegym.a0223i1_pharmacy_professional_be.service.interfaceservice.customermanagement.ICustomerService;
 import com.codegym.a0223i1_pharmacy_professional_be.validate.CustomerValidate;
@@ -26,6 +27,8 @@ public class CustomerManagementController {
     //Quản lý khách hàng
     @Autowired
     private ICustomerService iCustomerService;
+    @Autowired
+    private ICustomerRepository iCustomerRepository;
 
     @Autowired
     private IAccountService iAccountService;
@@ -33,57 +36,93 @@ public class CustomerManagementController {
     private CustomerValidate customerValidate;
 
     @GetMapping("/lists")
-    public ResponseEntity<?> getAllCustomer(@RequestParam(value = "page", defaultValue = "10") Integer page){
+    public ResponseEntity<?> getAllCustomer(@RequestParam(value = "page", defaultValue = "10") Integer page) {
         Page<Customer> customers = iCustomerService.getAllCustomer(Pageable.ofSize(page));
-        if (customers.isEmpty()){
+        if (customers.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(customers, HttpStatus.OK);
     }
+
+    //    @GetMapping("/list")
+//    public ResponseEntity<Page<?>> getAllCustomer(@RequestParam String sortOption,
+//                                                  @RequestParam String searchType,
+//                                                  @RequestParam String searchValue,
+//                                                  Pageable pageable) {
+//        Page<Customer> customers = null;
+//        if (searchType != null && !searchType.isEmpty() && searchValue != null && !searchValue.isEmpty()) {
+//            switch (searchType) {
+//                case "customerId":
+//                    customers = iCustomerService.getCustomerById(searchValue, pageable);
+//                    break;
+//                case "customerName":
+//                    customers = iCustomerService.getAllCustomerByName(searchValue, pageable);
+//                    break;
+//                case "customerType":
+//                    customers = iCustomerService.getAllCustomerByType(searchValue, pageable);
+//                    break;
+//                case "address":
+//                    customers = iCustomerService.getCustomerByAddress(searchValue, pageable);
+//                    break;
+//                case "phoneNumber":
+//                    customers = iCustomerService.getAllCustomerByPhoneNumber(searchValue, pageable);
+//                    break;
+//            }
+//        } else if (sortOption != null && !sortOption.isEmpty()) {
+//            switch (sortOption) {
+//                case "customerId":
+//                    customers = iCustomerService.getAllOrderByCustomerId(pageable);
+//                    break;
+//                case "customerName":
+//                    customers = iCustomerService.getAllOrderByCustomerName(pageable);
+//                    break;
+//                case "address":
+//                    customers = iCustomerService.getAllOrderByCustomerAddress(pageable);
+//                    break;
+//                case "customerType":
+//                    customers = iCustomerService.getAllOrderByCustomerType(pageable);
+//                    break;
+//                case "phoneNumber":
+//                    customers = iCustomerService.getAllOrderByPhoneNumber(pageable);
+//                    break;
+//            }
+//        } else {
+//            customers = iCustomerService.getAllOrderByCustomerId(pageable);
+//        }
+//        return new ResponseEntity<>(customers, HttpStatus.OK);
+//    }
     @GetMapping("/list")
-    public ResponseEntity<Page<?>> getAllCustomer(@RequestParam String sortOption,
-                                                  @RequestParam String searchType,
-                                                  @RequestParam String searchValue,
-                                                  Pageable pageable) {
-        Page<Customer> customers = null;
+    public ResponseEntity<Page<Customer>> getAllCustomers(
+            @RequestParam(required = false) String sortOption,
+            @RequestParam(required = false) String searchType,
+            @RequestParam(required = false) String searchValue,
+            Pageable pageable) {
+        Page<Customer> customers;
         if (searchType != null && !searchType.isEmpty() && searchValue != null && !searchValue.isEmpty()) {
             switch (searchType) {
                 case "customerId":
-                    customers = iCustomerService.getCustomerById(searchValue, pageable);
+                    customers = iCustomerRepository.findAllCustomerWithSort(searchValue, null, null, null, null, sortOption, pageable);
                     break;
                 case "customerName":
-                    customers = iCustomerService.getAllCustomerByName(searchValue, pageable);
-                    break;
-                case "customerType":
-                    customers = iCustomerService.getAllCustomerByType(searchValue, pageable);
+                    customers = iCustomerRepository.findAllCustomerWithSort(null, searchValue, null, null, null, sortOption, pageable);
                     break;
                 case "address":
-                    customers = iCustomerService.getCustomerByAddress(searchValue, pageable);
+                    customers = iCustomerRepository.findAllCustomerWithSort(null, null, searchValue, null, null, sortOption, pageable);
                     break;
                 case "phoneNumber":
-                    customers = iCustomerService.getAllCustomerByPhoneNumber(searchValue, pageable);
+                    customers = iCustomerRepository.findAllCustomerWithSort(null, null, null, searchValue, null, sortOption, pageable);
+                    break;
+                case "customerType":
+                    customers = iCustomerRepository.findAllCustomerWithSort(null, null, null, null, searchValue, sortOption, pageable);
+                    break;
+                default:
+                    customers = iCustomerRepository.findAllCustomerWithSort(null, null, null, null, null, sortOption, pageable);
                     break;
             }
         } else if (sortOption != null && !sortOption.isEmpty()) {
-            switch (sortOption) {
-                case "customerId":
-                    customers = iCustomerService.getAllOrderByCustomerId(pageable);
-                    break;
-                case "customerName":
-                    customers = iCustomerService.getAllOrderByCustomerName(pageable);
-                    break;
-                case "address":
-                    customers = iCustomerService.getAllOrderByCustomerAddress(pageable);
-                    break;
-                case "customerType":
-                    customers = iCustomerService.getAllOrderByCustomerType(pageable);
-                    break;
-                case "phoneNumber":
-                    customers = iCustomerService.getAllOrderByPhoneNumber(pageable);
-                    break;
-            }
+            customers = iCustomerRepository.findAllCustomerWithSort(null, null, null, null, null, sortOption, pageable);
         } else {
-            customers = iCustomerService.getAllOrderByCustomerId(pageable);
+            customers = iCustomerRepository.findAllCustomerWithSort(null, null, null, null, null, null, pageable);
         }
         return new ResponseEntity<>(customers, HttpStatus.OK);
     }
@@ -101,9 +140,9 @@ public class CustomerManagementController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteCustomer(@PathVariable String id) {
-        Customer customer= iCustomerService.getCustomerById(id);
-        if (customer==null){
-            return new ResponseEntity<>("Khách hàng không tồn tại",HttpStatus.BAD_REQUEST);
+        Customer customer = iCustomerService.getCustomerById(id);
+        if (customer == null) {
+            return new ResponseEntity<>("Khách hàng không tồn tại", HttpStatus.BAD_REQUEST);
         }
         iCustomerService.deleteCustomer(id);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -113,7 +152,7 @@ public class CustomerManagementController {
     public ResponseEntity<?> findCustomerById(@PathVariable String id) {
         Customer customer = iCustomerService.getCustomerById(id);
         if (customer == null) {
-            return new ResponseEntity<>("Khách hàng không tồn tại",HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Khách hàng không tồn tại", HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(customer, HttpStatus.OK);
     }
@@ -124,9 +163,9 @@ public class CustomerManagementController {
                                                    @RequestParam(required = false) String startDay,
                                                    @RequestParam(required = false) String endDay,
                                                    @RequestParam(required = false) String startHour,
-                                                   @RequestParam(required = false) String endHour,Pageable pageable) {
+                                                   @RequestParam(required = false) String endHour, Pageable pageable) {
 
-        Page<IInvoiceDTO> invoice = iCustomerService.getAllInvoiceCustomer(id,startDay,endDay,startHour,endHour,pageable);
+        Page<IInvoiceDTO> invoice = iCustomerService.getAllInvoiceCustomer(id, startDay, endDay, startHour, endHour, pageable);
         if (invoice == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }

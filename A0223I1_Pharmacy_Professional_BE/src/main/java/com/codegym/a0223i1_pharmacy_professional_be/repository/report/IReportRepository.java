@@ -160,31 +160,63 @@ public interface IReportRepository extends JpaRepository<Medicine, String> {
 //                ,@Param("startHour") String startHour,@Param("endHour") String endHour);
 
 
-    @Query(nativeQuery = true, value =
-            "SELECT e.employee_name as employeeName , \n" +
-                    "       DATE_FORMAT(i.date_create, '%Y-%m-%d') as dateCreate, \n" +
-                    "       i.invoice_id as invoiceId, \n" +
-                    "       i.total\n" +
-                    "FROM invoice i\n" +
-                    "JOIN employee e ON i.employee_id = e.employee_id\n" +
-                    "    WHERE (\n" +
-                    "        DATE(date_create)  BETWEEN :startDay AND :endDay AND\n" +
-                    "        TIME(date_create) BETWEEN :startHour AND :endHour\n" +
-                    "    )\n" +
-                    "UNION ALL\n" +
-                    "SELECT e.employee_name, \n" +
-                    "       DATE_FORMAT(ip.date_create, '%Y-%m-%d'), \n" +
-                    "       ip.invoice_pres_id, \n" +
-                    "       ip.total\n" +
-                    "FROM invoice_pres ip\n" +
-                    "JOIN employee e ON ip.employee_id = e.employee_id\n" +
-                    "    WHERE (\n" +
-                    "        DATE(date_create)  BETWEEN :startDay AND :endDay AND\n" +
-                    "        TIME(date_create) BETWEEN :startHour AND :endHour\n" +
-                    "    )\n" +
-                    "ORDER BY dateCreate")
-    List<ISalesDiaryDTO> salesDiary(@Param("startDay") String startDay, @Param("endDay") String endDay
-            , @Param("startHour") String startHour, @Param("endHour") String endHour);
+//    @Query(nativeQuery = true, value =
+//            "SELECT e.employee_name as employeeName , \n" +
+//                    "       DATE_FORMAT(i.date_create, '%Y-%m-%d') as dateCreate, \n" +
+//                    "       i.invoice_id as invoiceId, \n" +
+//                    "       i.total\n" +
+//                    "FROM invoice i\n" +
+//                    "JOIN employee e ON i.employee_id = e.employee_id\n" +
+//                    "    WHERE (\n" +
+//                    "        DATE(date_create)  BETWEEN :startDay AND :endDay AND\n" +
+//                    "        TIME(date_create) BETWEEN :startHour AND :endHour\n" +
+//                    "    )\n" +
+//                    "UNION ALL\n" +
+//                    "SELECT e.employee_name, \n" +
+//                    "       DATE_FORMAT(ip.date_create, '%Y-%m-%d'), \n" +
+//                    "       ip.invoice_pres_id, \n" +
+//                    "       ip.total\n" +
+//                    "FROM invoice_pres ip\n" +
+//                    "JOIN employee e ON ip.employee_id = e.employee_id\n" +
+//                    "    WHERE (\n" +
+//                    "        DATE(date_create)  BETWEEN :startDay AND :endDay AND\n" +
+//                    "        TIME(date_create) BETWEEN :startHour AND :endHour\n" +
+//                    "    )\n" +
+//                    "ORDER BY dateCreate")
+//    List<ISalesDiaryDTO> salesDiary(@Param("startDay") String startDay, @Param("endDay") String endDay
+//            , @Param("startHour") String startHour, @Param("endHour") String endHour);
+@Query(nativeQuery = true, value =
+        "SELECT e.employee_id as employeeId, e.employee_name as employeeName , i.invoice_id as invoiceId ,DATE_FORMAT(i.date_create, '%Y-%m-%d') AS saleDate, \n" +
+                "    SUM(id.price * id.quantity) AS totalInvoiceAmount,\n" +
+                "    COALESCE(NULL, 'N/A') AS doctorDiagnosis,\n" +
+                "    COALESCE(NULL, 'N/A') AS doctorName,\n" +
+                "    COALESCE(NULL, 'N/A') AS doctorPhone,\n" +
+                "    COALESCE(NULL, 'N/A') AS symptom,\n" +
+                "    COALESCE(i.note, 'N/A') AS note\n" +
+                "FROM employee e\n" +
+                "JOIN invoice i ON e.employee_id = i.employee_id\n" +
+                "JOIN invoice_detail id ON i.invoice_id = id.invoice_id\n" +
+                "    WHERE (\n" +
+                "        DATE(date_create)  BETWEEN :startDay AND :endDay AND\n" +
+                "        TIME(date_create) BETWEEN :startHour AND :endHour\n" +
+                "    )\n" +
+                "GROUP BY employeeId,employeeName, invoiceId,saleDate,i.note\n" +
+                "UNION ALL\n" +
+                "SELECT e.employee_id as employeeId, e.employee_name as employeeName, ip.invoice_pres_id as invoiceId ,DATE_FORMAT(ip.date_create, '%Y-%m-%d') AS saleDate, \n" +
+                "    SUM(id.price * id.quantity) AS totalInvoiceAmount,ip.doctor_diagnosis as doctorDiagnosis,ip.doctor_name as doctorName,\n" +
+                "    ip.doctor_phone,ip.symptom,COALESCE(ip.note, 'N/A') AS note\n" +
+                "FROM employee e\n" +
+                "JOIN invoice_pres ip ON e.employee_id = ip.employee_id\n" +
+                "JOIN invoice_detail id ON ip.invoice_pres_id = id.invoice_pres_id\n" +
+                "    WHERE (\n" +
+                "        DATE(date_create)  BETWEEN :startDay AND :endDay AND\n" +
+                "        TIME(date_create) BETWEEN :startHour AND :endHour\n" +
+                "    )\n" +
+                "GROUP BY employeeId,employeeName, invoiceId,saleDate,ip.doctor_diagnosis,\n" +
+                "ip.doctor_name,ip.doctor_phone,ip.symptom,ip.note\n" +
+                "ORDER BY employeeName")
+List<ISalesDiaryDTO> salesDiary(@Param("startDay") String startDay, @Param("endDay") String endDay
+        , @Param("startHour") String startHour, @Param("endHour") String endHour);
 
     @Query(nativeQuery = true, value =
             "SELECT s.supplier_id as supplierId, s.supplier_name as supplierName, s.address, s.email, s.phone_number as phoneNumber, \n" +

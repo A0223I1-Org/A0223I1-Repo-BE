@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -94,18 +95,33 @@ public interface ICustomerRepository extends JpaRepository<Customer,String> {
     @Modifying
     void deleteCustomer(String id);
 
+//    @Query(value =
+//            "SELECT invoice.invoice_id as invoiceId,DATE(invoice.date_create) as date,\n" +
+//                    "TIME(invoice.date_create) as time,employee.employee_name as employeeName,invoice.total as total\n" +
+//                    "FROM invoice\n" +
+//                    "INNER JOIN customer ON invoice.customer_id = customer.customer_id\n" +
+//                    "INNER JOIN employee ON invoice.employee_id = employee.employee_id\n" +
+//                    "INNER JOIN `account` ON customer.account_id = `account`.account_id\n" +
+//                    "WHERE DATE(invoice.date_create) BETWEEN ?2 AND ?3 AND\n" +
+//                    "    CAST(TIME(invoice.date_create) AS TIME) BETWEEN ?4 AND ?5 AND\n" +
+//                    "    customer.customer_id = ?1 AND `account`.delete_flag = 0;", nativeQuery = true)
+//    Page<IInvoiceDTO> getAllInvoiceCustomer( String id, String startDay, String endDay,String startHour,
+//                                             String endHour,Pageable pageable);
     @Query(value =
-            "SELECT invoice.invoice_id as invoiceId,DATE(invoice.date_create) as date,\n" +
-                    "TIME(invoice.date_create) as time,employee.employee_name as employeeName,invoice.total as total\n" +
-                    "FROM invoice\n" +
-                    "INNER JOIN customer ON invoice.customer_id = customer.customer_id\n" +
-                    "INNER JOIN employee ON invoice.employee_id = employee.employee_id\n" +
-                    "INNER JOIN `account` ON customer.account_id = `account`.account_id\n" +
-                    "WHERE DATE(invoice.date_create) BETWEEN ?2 AND ?3 AND\n" +
-                    "    CAST(TIME(invoice.date_create) AS TIME) BETWEEN ?4 AND ?5 AND\n" +
-                    "    customer.customer_id = ?1 AND `account`.delete_flag = 0;", nativeQuery = true)
-    Page<IInvoiceDTO> getAllInvoiceCustomer( String id, String startDay, String endDay,String startHour,
-                                             String endHour,Pageable pageable);
+            "SELECT invoice.invoice_id as invoiceId, DATE(invoice.date_create) as date, " +
+                    "TIME(invoice.date_create) as time, employee.employee_name as employeeName, invoice.total as total " +
+                    "FROM invoice " +
+                    "INNER JOIN customer ON invoice.customer_id = customer.customer_id " +
+                    "INNER JOIN employee ON invoice.employee_id = employee.employee_id " +
+                    "INNER JOIN `account` ON customer.account_id = `account`.account_id " +
+                    "WHERE customer.customer_id = ?1 AND `account`.delete_flag = 0 " +
+                    "AND (DATE(invoice.date_create) BETWEEN ?2 AND ?3 " +
+                    "OR (?2 IS NULL AND ?3 IS NULL)) " +
+                    "AND (CAST(TIME(invoice.date_create) AS TIME) BETWEEN ?4 AND ?5 " +
+                    "OR (?4 IS NULL AND ?5 IS NULL))",
+            nativeQuery = true)
+    Page<IInvoiceDTO> getAllInvoiceCustomer(String id, String startDay, String endDay, String startHour,
+                                            String endHour, Pageable pageable);
 
     @Modifying
     @Query(value = "insert into customer(customer.customer_id,customer.customer_name,customer.age,customer.address,customer.phone_number," +
@@ -125,6 +141,31 @@ public interface ICustomerRepository extends JpaRepository<Customer,String> {
 
     @Query(value = "select * from customer ", nativeQuery = true)
     List<String> getAllCustomerIncludeDeleted();
+
+    @Query(value = "SELECT c FROM Customer c " +
+            "JOIN Account a ON c.account.accountId = a.accountId  " +
+            "WHERE a.deleteFlag = FALSE "+
+            "AND (:customerId IS NULL OR c.customerId LIKE CONCAT('%', :customerId, '%')) " +
+            "AND (:customerName IS NULL OR c.customerName LIKE CONCAT('%', :customerName, '%')) " +
+            "AND (:address IS NULL OR c.address LIKE CONCAT('%', :address, '%')) " +
+            "AND (:phoneNumber IS NULL OR c.phoneNumber LIKE CONCAT('%', :phoneNumber, '%')) " +
+            "AND (:customerType IS NULL OR c.customerType LIKE CONCAT('%', :customerType, '%')) " +
+            "ORDER BY " +
+            "CASE " +
+            "WHEN :sortOption = 'customerId' THEN c.customerId " +
+            "WHEN :sortOption = 'customerName' THEN c.customerName " +
+            "WHEN :sortOption = 'address' THEN c.address " +
+            "WHEN :sortOption = 'phoneNumber' THEN c.phoneNumber " +
+            "WHEN :sortOption = 'customerType' THEN c.customerType " +
+            "ELSE c.customerId END")
+    Page<Customer> findAllCustomerWithSort(
+            @Param("customerId") String customerId,
+            @Param("customerName") String customerName,
+            @Param("address") String address,
+            @Param("phoneNumber") String phoneNumber,
+            @Param("customerType") String customerType,
+            @Param("sortOption") String sortOption,
+            Pageable pageable);
 }
 
 
