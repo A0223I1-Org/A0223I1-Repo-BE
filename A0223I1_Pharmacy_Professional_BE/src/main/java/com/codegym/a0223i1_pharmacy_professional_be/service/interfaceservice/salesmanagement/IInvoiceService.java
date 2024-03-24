@@ -10,7 +10,7 @@ import java.time.LocalTime;
 import java.util.List;
 
 public interface IInvoiceService {
-    List<InvoiceListViewDTO> findAllInvoice();
+    Page<InvoiceListViewDTO> findAllInvoice(Pageable pageable);
 
     Page<InvoiceListViewDTO> findInvoiceByDateAndTimeRangeAndDisplayField(LocalDate fromDate,  LocalDate toDate,  LocalTime fromTime, LocalTime toTime, String displayField, Pageable pageable);
     Page<InvoiceListViewDTO> findInvoiceByDateAndTimeRange(LocalDate fromDate,  LocalDate toDate,  LocalTime fromTime, LocalTime toTime, Pageable pageable);

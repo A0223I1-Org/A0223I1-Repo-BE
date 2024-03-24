@@ -29,8 +29,8 @@ public class InvoiceService implements IInvoiceService {
     @Autowired
     private IEmployeeRepository iEmployeeRepository;
     @Override
-    public List<InvoiceListViewDTO> findAllInvoice() {
-        return iInvoiceRepository.findAllInvoice();
+    public Page<InvoiceListViewDTO> findAllInvoice(Pageable pageable) {
+        return iInvoiceRepository.findAllInvoice(pageable);
 
     }
 

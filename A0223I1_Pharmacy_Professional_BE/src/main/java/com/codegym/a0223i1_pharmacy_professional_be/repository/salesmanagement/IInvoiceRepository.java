@@ -16,7 +16,7 @@ public interface IInvoiceRepository extends JpaRepository<Invoice, String> {
             "FROM invoice i " +
             "JOIN customer c ON i.customer_id = c.customer_id " +
             "JOIN employee e ON i.employee_id = e.employee_id", nativeQuery = true)
-    List<InvoiceListViewDTO> findAllInvoice();
+    Page<InvoiceListViewDTO> findAllInvoice(Pageable pageable);
 
     @Query(value = "SELECT i.invoice_id, i.customer_id, i.employee_id, DATE(i.date_create) AS create_date, TIME(i.date_create) AS create_time, i.status, i.total, i.note, c.customer_name, e.employee_name, i.invoice_type " +
             "FROM invoice i " +

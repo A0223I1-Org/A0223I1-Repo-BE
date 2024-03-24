@@ -41,8 +41,8 @@ public class RetailSalesManagementController {
     @Autowired
     private MedicineRepository medicineRepository;
     @GetMapping("/displayInvoice")
-    public ResponseEntity<?> findAllInvoice() {
-        List<InvoiceListViewDTO> result = invoiceService.findAllInvoice();
+    public ResponseEntity<?> findAllInvoice(Pageable pageable) {
+        Page<InvoiceListViewDTO> result = invoiceService.findAllInvoice(pageable);
         if (result != null && !result.isEmpty()) {
             Map<String, Object> response = new HashMap<>();
             response.put("data", result);
@@ -64,7 +64,7 @@ public class RetailSalesManagementController {
             @RequestParam("toTime") @DateTimeFormat(pattern = "HH:mm:ss") LocalTime toTime,
             @RequestParam(value = "sortField", required = false) String sortField,
             @RequestParam(value = "displayField", required = false) String displayField,
-            @PageableDefault(page = 0, size = 10) Pageable pageable) {
+             Pageable pageable) {
         try {
             Page<InvoiceListViewDTO> result;
             if (displayField != null && sortField != null) {
@@ -228,10 +228,17 @@ public class RetailSalesManagementController {
     public ResponseEntity<String> createInvoice(@RequestBody InvoiceDTO invoiceDTO) {
         try {
             String dateCreateFFromReact = invoiceDTO.getDateCreateF();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            LocalDate localDate = LocalDate.parse(dateCreateFFromReact, formatter);
-            LocalDateTime localDateTime = localDate.atStartOfDay();
-            Timestamp timestamp = Timestamp.valueOf(localDateTime);
+            // Lấy thời gian hiện tại của máy tính
+            LocalDateTime currentDateTime = LocalDateTime.now();
+            // Chuyển đổi ngày từ React thành LocalDateTime
+            LocalDateTime localDateTime = LocalDateTime.parse(dateCreateFFromReact + "T00:00:00");
+
+            // Kết hợp thời gian hiện tại của máy tính với ngày từ React
+            LocalDateTime combinedDateTime = localDateTime.withHour(currentDateTime.getHour())
+                    .withMinute(currentDateTime.getMinute())
+                    .withSecond(currentDateTime.getSecond());
+            // Chuyển đổi thành Timestamp
+            Timestamp timestamp = Timestamp.valueOf(combinedDateTime);
 
             Employee employee = new Employee();
               employee = employeeService.findByEmployeeId(invoiceDTO.getEmployeeIdF());
